@@ -1,0 +1,46 @@
+{% extends "index.html" %}
+{% block tudo %}
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+  <div class="section-title container">
+    <h2>Lista de Solicitações</h2>
+  </div>
+
+  <div class="reply-form" style="text-align: center">
+
+    <table class="table">
+      <thead>
+        <th style="color: #e93138">Código</th>
+        <th style="color: #e93138">Data</th>
+        <th style="color: #e93138">Urgência</th>
+        <th style="color: #e93138">Local da internação</th>
+        <th style="color: #e93138">Tipo sanguìneo</th>
+        <th style="color: #e93138">Situação</th>
+        <th style="color: #e93138">Opções</th>
+      </thead>
+      <tbody>
+      {% if solicitacoes %}
+        {% for s in solicitacoes %}
+          <tr>
+            <td>{{ s[0] }}</td>
+            <td>{{ s[1] }}</td>
+            <td>{{ s[5] }}</td>
+            <td>{{ s[2] }}</td>
+            <td>{{ s[3] }}</td>
+            <td>{{ s[4] }}</td>
+            <td> <a href="{{ url_for('excluir_solicitacao', codigo=s[0]) }}">Excluir</a>|<a href="{{ url_for('atualizar_solicitacao', codigo=s[0]) }}">Editar</a>  <!--<a href="{{ url_for('doar_solicitacao', codigo=s[0]) }}">Doar</a> </td>-->
+          </tr>
+        {% endfor %}
+      {% else %}
+        <p>Nenhum item foi encontrado</p>
+      {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock tudo %}

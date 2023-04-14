@@ -1,0 +1,43 @@
+{% extends "index.html" %}
+{% block tudo %}
+
+<section id="appointment" class="appointment section-bg">
+      <div class="container" style="height: 100vh;">
+        <br>
+        <br>
+        <div class="section-title">
+          <h2>Login</h2>
+          <br>
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              <ul id="messages" class="list-unstyled">
+              {% for category, message in messages %}
+                <li class="alert alert-{{ category }}">{{ message }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+          {% endwith %}
+        </div>
+
+        <form action="{{ url_for('login') }}" method="POST" role="form">
+          <div class="row">
+            <div class="col-md-4 form-group mt-3 mt-md-0 container">
+              <input type="email" class="form-control" name="email" id="email" placeholder="example@gmail.com" data-rule="email" data-msg="Please enter a valid email" required>
+              <div class="validate"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 form-group mt-3 container">
+              <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+              <div class="validate"></div>
+            </div>
+          </div>
+          <br>
+          <div class="text-center"><button class="botao-cadastro" type="submit">Logar</button></div>
+        </form>
+
+      </div>
+    </section>
+
+{% endblock tudo %}

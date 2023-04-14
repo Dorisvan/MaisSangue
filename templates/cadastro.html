@@ -1,0 +1,141 @@
+{% extends "index.html" %}
+{% block tudo %}
+
+<br>
+<br>
+
+<section id="appointment" class="appointment section-bg" style="height: 100vh;">
+      <div class="container">
+
+        <div class="section-title container">
+          <h2>Cadastro</h2>
+          <br>
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              <ul id="messages" class="list-unstyled">
+              {% for category, message in messages %}
+                <!--<img src="static/assets/Imagens/Coração_Cadastro.png" class="coracao">-->
+                <li class="alert alert-{{ category }}">{{ message }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+          {% endwith %}
+        </div>
+
+        <form action="{{ url_for('cadastro') }}" method="POST" >
+          <div class="row">
+            <div class="col-md-4 form-group container">
+              <label for="nome"></label>
+              <input type="text" name="nome" class="form-control" id="nome" placeholder="Nome completo" required>
+              <div class="validate"></div>
+            </div>
+            <div class="col-md-4 form-group mt-3 mt-md-0 container">
+              <label for="email"></label>
+              <input type="email" class="form-control" name="email" id="email" placeholder="example@gmail.com" required>
+              <div class="validate"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 form-group mt-3 container">
+              <label for="cpf"></label>
+              <input type="text" class="form-control" name="cpf" id="cpf" placeholder="CPF">
+              <div class="validate"></div>
+            </div>
+            <div class="col-md-4 form-group mt-3 container">
+              <label for="cep"></label>
+              <input type="text" class="form-control" name="cep" id="cep" placeholder="CEP">
+              <div class="validate"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 form-group mt-3 container">
+              <label for="cidade"></label>
+              <input type="text" class="form-control" name="cidade" id="cidade" placeholder="Cidade">
+              <div class="validate"></div>
+            </div>
+
+            <div class="col-md-4 form-group mt-3 container">
+              <label for="dt_nasc"></label>
+              <input type="text" class="form-control" name="dt_nasc" id="dt_nasc" placeholder="Data de nascimento">
+              <div class="validate"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 form-group mt-3 container">
+              <label for="tipo_sanguineo"></label>
+              <select name="tipo_sanguineo" id="tipo_sanguineo" class="form-select">
+                <option value="">Selecione o seu tipo sanguíneo</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+              <div class="validate"></div>
+            </div>
+
+            <div class="col-md-4 form-group mt-3 container">
+              <label for="peso"></label>
+              <input type="text" class="form-control" name="peso" id="peso" placeholder="Peso">
+              <div class="validate"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 form-group mt-3 container">
+              <label for="telefone"></label>
+                <input type="text" class="form-control" name="telefone" id="telefone" placeholder="Telefone">
+              <div class="validate"></div>
+            </div>
+
+            <div class="col-md-4 form-group mt-3 container">
+                <label for="opcao_doacao"></label>
+                <select name="opcao_doacao" id="opcao_doacao" class="form-select">
+                <option value="">Deseja ser um doador?</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+                <option value="Não">No momento não</option>
+              </select>
+              <div class="validate"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 form-group mt-3 container">
+              <label for="senha"></label>
+              <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha">
+              <div class="validate"></div>
+            </div>
+          </div>
+
+          <br>
+          <br>
+
+          <div class="text-center">
+            <button class="botao-cadastro" type="submit">Cadastrar</button>,
+            <br>
+            <br>
+            <a class="botao-cadastro" href="/login">Já possuo uma conta</a>
+          </div>
+
+
+
+        </form>
+
+      </div>
+
+      <div class="section-title"></div>
+    </section><!-- End Appointment Section -->
+
+{% endblock tudo %}
+
+
+
+
+
+

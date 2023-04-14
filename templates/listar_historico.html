@@ -1,0 +1,37 @@
+{% extends "index.html" %}
+{% block tudo %}
+
+<br>
+<br>
+
+<h4 class="comments-count">Histórico de saúde</h4>
+  <div class="reply-form">
+
+    <table class="table">
+      <thead>
+        <th>Código</th>
+        <th>Data</th>
+        <th>Urgência</th>
+        <th>Local da internação</th>
+        <th>Tipo sanguìneo</th>
+      </thead>
+      <tbody>
+      {% if solicitacoes %}
+        {% for s in solicitacoes %}
+          <tr>
+            <td>{{ s[0] }}</td>
+            <td>{{ s[1] }}</td>
+            <td>{{ s[4] }}</td>
+            <td>{{ s[2] }}</td>
+            <td>{{ s[3] }}</td>
+            <td> <a href="{{ url_for('excluir_solicitacao', codigo=s[0]) }}">Excluir</a>|<a href="{{ url_for('atualizar_solicitacao', codigo=s[0]) }}">Editar</a> | <a href="{{ url_for('doar_solicitacao', codigo=s[0]) }}">Doar</a> </td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <p>Nenhum item foi encontrado</p>
+      {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock tudo %}

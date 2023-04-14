@@ -1,0 +1,40 @@
+{% extends "index.html" %}
+{% block tudo %}
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+  <div class="section-title container">
+    <h2>Lista de Doações</h2>
+  </div>
+
+  <div class="reply-form" style="text-align: center">
+
+    <table class="table">
+      <thead>
+        <th style="color: #e93138">Código</th>
+        <th style="color: #e93138">Data</th>
+        <th style="color: #e93138">Local da internação</th>
+        <th style="color: #e93138">Tipo sanguìneo</th>
+      </thead>
+      <tbody>
+      {% if doacoes %}
+        {% for d in doacoes %}
+          <tr>
+            <td>{{ d[0] }}</td>
+            <td>{{ d[1] }}</td>
+            <td>{{ d[2] }}</td>
+            <td>{{ d[3] }}</td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <p>Nenhum item foi encontrado</p>
+      {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock tudo %}

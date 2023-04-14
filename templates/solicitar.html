@@ -1,0 +1,68 @@
+{% extends "index.html" %}
+{% block tudo %}
+
+<br>
+<br>
+
+<section id="appointment" class="appointment section-bg" style="height: 100vh;">
+      <div class="container">
+        <div class="section-title container">
+          <h2>Área de solicitação</h2>
+          <br>
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              <ul id="messages" class="list-unstyled">
+              {% for category, message in messages %}
+                <li class="alert alert-{{ category }}">{{ message }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+          {% endwith %}
+        </div>
+
+        <form action="{{ url_for('solicitar') }}" method="POST" >
+          <div class="row">
+            <div class="col-md-4 form-group container">
+              <label for="data"></label>
+              <input type="date" name="data" class="form-control" id="data" placeholder="Data atual" required>
+              <div class="validate"></div>
+            </div>
+            <div class="col-md-4 form-group mt-3 mt-md-0 container">
+              <label for="urgencia"></label>
+              <select name="urgencia" id="urgencia" class="form-select">
+                <option value="">Selecione a urgência</option>
+                <option value="4">Extrema</option>
+                <option value="3">Alta</option>
+                <option value="2">Média</option>
+                <option value="1">Baixa</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 form-group mt-3 container">
+              <label for="local_internacao"></label>
+              <input type="text" class="form-control" name="local_internacao" id="local_internacao" placeholder="Local da internação">
+              <div class="validate"></div>
+            </div>
+            <div class="col-md-4 form-group mt-3 container">
+              <label for="usuario_cpf"></label>
+              <input type="text" class="form-control" name="usuario_cpf" id="usuario_cpf" placeholder="CPF do usuário">
+              <div class="validate"></div>
+            </div>
+          </div>
+
+          <br>
+          <br>
+
+          <div class="text-center"><button class="botao-cadastro" type="submit">Solicitar</button></div>
+        </form>
+
+      </div>
+
+      <div class="section-title"></div>
+    </section><!-- End Appointment Section -->
+
+
+
+{% endblock tudo %}
