@@ -113,14 +113,14 @@ def cadastro():
         cpf = request.form['cpf']
         cep = request.form['cep']
         cidade = request.form['cidade']
-        idade = request.form['dt_nasc']
+        dt_nasc = request.form['dt_nasc']
         tipo_sanguineo = request.form['tipo_sanguineo']
         peso = request.form['peso']
         telefone = request.form['telefone']
         opcao_doacao = request.form['opcao_doacao']
         senha = request.form['senha']
 
-        usuario = Usuario(cpf, nome, idade, peso, tipo_sanguineo, cep, cidade, email, senha, 0, telefone, opcao_doacao)
+        usuario = Usuario(cpf, nome, dt_nasc, peso, tipo_sanguineo, cep, cidade, email, senha, 0, telefone, opcao_doacao)
         dao = UsuarioDAO(get_db())
         codigo = dao.Inserir(usuario)
         print(codigo)
@@ -146,10 +146,10 @@ def login():
 
         if usuario is not None:
             session['logado'] = {
-                'cpf': usuario[0],
-                'nome': usuario[1],
-                'email': usuario[7],
-                'estado_sessao': usuario[13]
+                'cpf': usuario[1],
+                'nome': usuario[2],
+                'email': usuario[8],
+                'estado_sessao': usuario[14]
             }
             return redirect(url_for('painel'))
         else:
@@ -270,7 +270,7 @@ def listar_doencas():
 
 # Funções de UPDATE
 
-@app.route('/atualizar_usuario/<cpf>', methods=['GET', 'POST'])
+@app.route('/atualizar_usuario, <int:cpf>', methods=['GET', 'POST'])
 def atualizar_usuario(cpf):
     dao = UsuarioDAO(get_db())
 
@@ -298,10 +298,11 @@ def atualizar_usuario(cpf):
 
 
     usuario_db = dao.Listar(cpf)
-    return render_template("perfil_usuario.html", usuario = usuario_db)
+    vartitulo = "Atualizar_usuario"
+    return render_template("atualizar_usuario.html", titulo=vartitulo, usuario = usuario_db)
 
 
-@app.route('/atualizar_solicitacao/<codigo>', methods=['GET', 'POST'])
+@app.route('/atualizar_solicitacao, <codigo>', methods=['GET', 'POST'])
 def atualizar_solicitacao(codigo):
     dao = SolicitacaoDAO(get_db())
 
@@ -354,24 +355,35 @@ def doar_solicitacao(codigo):
 
 @app.route('/excluir_solicitacao/<codigo>', methods=['GET',])
 def excluir_solicitacao(codigo):
-    dao = Solicitacao(get_db())
+    dao = SolicitacaoDAO(get_db())
     ret = dao.Excluir(codigo)
     if ret == 1:
         flash(f"Solicitação {codigo} excluída com sucesso!", "success")
     else:
         flash(f"Erro ao excluir solicitação {codigo}.", "danger")
-    return redirect(url_for('solicitacoes.html'))
+    return redirect(url_for('listar_solicitacoes'))
+
+
+@app.route('/excluir_usuario/<cpf>', methods=['GET',])
+def excluir_usuario(cpf):
+    dao = UsuarioDAO(get_db())
+    ret = dao.Excluir(cpf)
+    if ret == 1:
+        flash(f"Conta excluída com sucesso!", "success")
+    else:
+        flash(f"Erro ao excluir Conta.", "danger")
+    return redirect(url_for('logout'))
 
 
 @app.route('/excluir_doenca/<codigo>', methods=['GET',])
 def excluir_doenca(codigo):
-    dao = UsuarioDoenca(get_db())
+    dao = UsuarioDoencaDAO(get_db())
     ret = dao.Excluir(codigo)
     if ret == 1:
         flash(f"Estado de saúde {codigo} excluído com sucesso!", "success")
     else:
         flash(f"Erro ao excluir estado de saúde{codigo}.", "danger")
-    return redirect(url_for('perfil_usuario.html'))
+    return redirect(url_for('atualizar_usuario.html'))
 
 
 # HOST

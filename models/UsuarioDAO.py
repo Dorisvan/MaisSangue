@@ -53,6 +53,18 @@ class UsuarioDAO():
         except:
             return 0
 
+
+    def Excluir(self, cpf):
+        try:
+            sql = "DELETE FROM Usuario WHERE cpf = %s"
+            cursor = self.con.cursor()
+            cursor.execute(sql, (cpf,))
+            self.con.commit()
+            return cursor.rowcount
+        except:
+            return 0
+
+
     def autenticar(self, email, senha):
         try:
             sql = "SELECT * FROM Usuario WHERE email=%s AND senha=%s"
