@@ -5,10 +5,10 @@ class UsuarioDAO():
     # CRUD --> Create, Retrieve, Uptade, Delete <--
     def Inserir(self, usuario):
         try:
-            sql = "INSERT INTO Usuario(cpf, nome, idade, peso, tipo_sanguineo, cep, cidade, email, senha, telefone, opcao_doacao, estado_sessao) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            sql = "INSERT INTO Usuario(cpf, nome, dt_nasc, peso, tipo_sanguineo, cep, cidade, email, senha, telefone, opcao_doacao, estado_sessao) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
             cursor = self.con.cursor()
-            cursor.execute(sql, (usuario.cpf, usuario.nome, usuario.idade, usuario.peso, usuario.tipo_sanguineo, usuario.cep, usuario.cidade, usuario.email, usuario.senha, usuario.telefone, usuario.opcao_doacao, usuario.estado_sessao))
+            cursor.execute(sql, (usuario.cpf, usuario.nome, usuario.dt_nasc, usuario.peso, usuario.tipo_sanguineo, usuario.cep, usuario.cidade, usuario.email, usuario.senha, usuario.telefone, usuario.opcao_doacao, usuario.estado_sessao))
 
             self.con.commit()
 
