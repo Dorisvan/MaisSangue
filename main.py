@@ -1,8 +1,12 @@
 # Bibliotecas e classes
+import json
 
 from flask import Flask, render_template, g, request, redirect, url_for, session, flash
 
 import mysql.connector
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
+import requests
 
 from models.Doacao import Doacao
 from models.DoacaoDAO import DoacaoDAO
@@ -104,6 +108,47 @@ def painel():
 
 
 # Funções de Cadastro/Login/Logout
+
+
+@app.route('/login_google')
+def login_google():
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+        'client_secret.json',
+        scopes=['https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile', 'openid'])
+
+    flow.redirect_uri = 'http://localhost/retorno'
+
+    authorization_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
+
+    #return flask.redirect(authorization_url)
+    return redirect(authorization_url)
+
+@app.route('/retorno')
+def retorno():
+    state = request.args.get['state']
+    code = request.args.get('code')
+
+    if code is None or code =='':
+        flash("Erro ao logar com conta do google.", "danger")
+        return redirect(url_for('login'))
+
+
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+        'client_secret.json',
+        scopes=['https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile', 'openid'],
+        state=state)
+    flow.redirect_uri = url_for('retorno', _external=True)
+
+    authorization_response = request.url
+    flow.fetch_token(authorization_response=authorization_response)
+
+    credentials = flow.credentials
+
+    resposta_api = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + credentials.token)
+    info_usuario = resposta_api.json()
+
+    return info_usuario['name'] + " " + info_usuario['email']
+
 
 @app.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
