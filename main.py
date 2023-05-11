@@ -48,6 +48,7 @@ app.auth = {
     'historico_doencas': {0:1, 1:1}
 }
 
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 @app.before_request
 def autorizacao():
@@ -118,7 +119,7 @@ def login_google():
         'client_secret.json',
         scopes=['https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile', 'openid'])
 
-    flow.redirect_uri = 'http://localhost/retorno'
+    flow.redirect_uri = 'https://localhost/retorno'
 
     authorization_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
 
@@ -127,7 +128,7 @@ def login_google():
 
 @app.route('/retorno')
 def retorno():
-    state = request.args.get['state']
+    state = request.args.get('state')
     code = request.args.get('code')
 
     if code is None or code =='':
@@ -151,7 +152,7 @@ def retorno():
 
     dao = UsuarioDAO(get_db())
 
-    user = dao.get(info_usuario['email'])
+    user = dao.Buscar_email(info_usuario['email'])
 
     if user is None:
         hash = hashlib.sha512()
@@ -171,9 +172,12 @@ def retorno():
             flash("Erro ao cadastrar usuário.", "danger")
             return redirect(url_for("login"))
         else:
-            user = dao.get(info_usuario['email'])
+            user = dao.Buscar_email(info_usuario['email'])
 
         session['logado'] = user
+
+        revoke = requests.post('https://oauth2.googleapis.com/revoke', params={'token': credentials.token}, headers={'content-type': 'application/x-www-form-urlencoded'})
+
         return redirect(url_for('painel'))
 
 
