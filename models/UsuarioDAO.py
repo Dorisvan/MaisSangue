@@ -38,6 +38,15 @@ class UsuarioDAO():
         except:
             return None
 
+
+    def Buscar_email(self, email):
+        sql = "SELECT * FROM Usuario WHERE email=%s"
+
+        cursor = self.db.cursor()
+        cursor.execute(sql, (email))
+
+        return cursor.fetchone()
+
     def Atualizar(self, usuario):
         try:
             sql = "UPDATE Usuario " \

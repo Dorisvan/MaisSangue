@@ -1,4 +1,5 @@
 # Bibliotecas e classes
+import hashlib
 import json
 
 from flask import Flask, render_template, g, request, redirect, url_for, session, flash
@@ -7,6 +8,7 @@ import mysql.connector
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import requests
+import os
 
 from models.Doacao import Doacao
 from models.DoacaoDAO import DoacaoDAO
@@ -147,7 +149,33 @@ def retorno():
     resposta_api = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + credentials.token)
     info_usuario = resposta_api.json()
 
-    return info_usuario['name'] + " " + info_usuario['email']
+    dao = UsuarioDAO(get_db())
+
+    user = dao.get(info_usuario['email'])
+
+    if user is None:
+        hash = hashlib.sha512()
+        senha = os.urandom(50)
+        secret = app.config['SECRET_KEY']
+        hash.update(f'{secret}{senha}'.encode('utf-8'))
+        senha_criptografada = hash.hexdigest()
+
+        usuario = Usuario("", info_usuario['name'], "", "", "", "", "", info_usuario['email'], senha_criptografada, "", "", "", "", "")
+
+        id = None
+
+        if usuario.nome and usuario.email and usuario.senha:
+            id = dao.Inserir(usuario)
+
+        if id is None or id <= 0:
+            flash("Erro ao cadastrar usuário.", "danger")
+            return redirect(url_for("login"))
+        else:
+            user = dao.get(info_usuario['email'])
+
+        session['logado'] = user
+        return redirect(url_for('painel'))
+
 
 
 @app.route('/cadastro', methods=['GET', 'POST'])
