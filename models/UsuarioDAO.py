@@ -42,8 +42,8 @@ class UsuarioDAO():
     def Buscar_email(self, email):
         sql = "SELECT * FROM Usuario WHERE email=%s"
 
-        cursor = self.db.cursor()
-        cursor.execute(sql, (email))
+        cursor = self.con.cursor()
+        cursor.execute(sql, (email,))
 
         return cursor.fetchone()
 

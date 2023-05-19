@@ -60,10 +60,10 @@ class Usuario():
 
 
     def getEstado(self):
-        return self.estado
+        return self.estado_sessao
 
     def setEstado(self, estado):
-        self.estado = estado
+        self.estado_sessao = estado
 
 
     def getCidade(self):

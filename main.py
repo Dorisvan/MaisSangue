@@ -27,6 +27,8 @@ from models.UsuarioDoencaDAO import UsuarioDoencaDAO
 app = Flask(__name__)
 app.secret_key = "senha123"
 
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
 
 DB_HOST = "localhost"
 DB_USER = "root"
@@ -48,7 +50,6 @@ app.auth = {
     'historico_doencas': {0:1, 1:1}
 }
 
-os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 @app.before_request
 def autorizacao():
@@ -119,7 +120,7 @@ def login_google():
         'client_secret.json',
         scopes=['https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile', 'openid'])
 
-    flow.redirect_uri = 'https://localhost/retorno'
+    flow.redirect_uri = 'http://localhost/retorno'
 
     authorization_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
 
@@ -150,9 +151,12 @@ def retorno():
     resposta_api = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + credentials.token)
     info_usuario = resposta_api.json()
 
+    email_busc = str(info_usuario['email'])
+    print((info_usuario['email']))
+
     dao = UsuarioDAO(get_db())
 
-    user = dao.Buscar_email(info_usuario['email'])
+    user = dao.Buscar_email(email_busc)
 
     if user is None:
         hash = hashlib.sha512()
@@ -161,7 +165,7 @@ def retorno():
         hash.update(f'{secret}{senha}'.encode('utf-8'))
         senha_criptografada = hash.hexdigest()
 
-        usuario = Usuario("", info_usuario['name'], "", "", "", "", "", info_usuario['email'], senha_criptografada, "", "", "", "", "")
+        usuario = Usuario("", info_usuario['name'], "", "", "", "", "", info_usuario['email'], senha_criptografada, 0, "", "", "", "")
 
         id = None
 
@@ -172,13 +176,14 @@ def retorno():
             flash("Erro ao cadastrar usuário.", "danger")
             return redirect(url_for("login"))
         else:
-            user = dao.Buscar_email(info_usuario['email'])
+            user = Usuario.getEstado()
 
-        session['logado'] = user
+    session['logado'] = user
 
-        revoke = requests.post('https://oauth2.googleapis.com/revoke', params={'token': credentials.token}, headers={'content-type': 'application/x-www-form-urlencoded'})
-
-        return redirect(url_for('painel'))
+    revoke = requests.post('https://oauth2.googleapis.com/revoke',
+                               params={'token': credentials.token},
+                               headers={'content-type': 'application/x-www-form-urlencoded'})
+    return redirect('painel')
 
 
 
