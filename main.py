@@ -1,8 +1,14 @@
 # Bibliotecas e classes
+import hashlib
+import json
 
 from flask import Flask, render_template, g, request, redirect, url_for, session, flash
 
 import mysql.connector
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
+import requests
+import os
 
 from models.Doacao import Doacao
 from models.DoacaoDAO import DoacaoDAO
@@ -20,6 +26,8 @@ from models.UsuarioDoencaDAO import UsuarioDoencaDAO
 
 app = Flask(__name__)
 app.secret_key = "senha123"
+
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 
 DB_HOST = "localhost"
@@ -105,6 +113,85 @@ def painel():
 
 # Funções de Cadastro/Login/Logout
 
+
+@app.route('/login_google')
+def login_google():
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+        'client_secret.json',
+        scopes=['https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile', 'openid'])
+
+    flow.redirect_uri = 'http://localhost/retorno'
+
+    authorization_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
+
+    #return flask.redirect(authorization_url)
+    return redirect(authorization_url)
+
+@app.route('/retorno')
+def retorno():
+    state = request.args.get('state')
+    code = request.args.get('code')
+
+    if code is None or code =='':
+        flash("Erro ao logar com conta do google.", "danger")
+        return redirect(url_for('login'))
+
+
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+        'client_secret.json',
+        scopes=['https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile', 'openid'],
+        state=state)
+    flow.redirect_uri = url_for('retorno', _external=True)
+
+    authorization_response = request.url
+    flow.fetch_token(authorization_response=authorization_response)
+
+    credentials = flow.credentials
+
+    resposta_api = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + credentials.token)
+    info_usuario = resposta_api.json()
+
+    email_busc = str(info_usuario['email'])
+    print((info_usuario['email']))
+
+    dao = UsuarioDAO(get_db())
+
+    user = dao.Buscar_email(email_busc)
+
+    if user is None:
+        hash = hashlib.sha512()
+        senha = os.urandom(50)
+        secret = app.config['SECRET_KEY']
+        hash.update(f'{secret}{senha}'.encode('utf-8'))
+        senha_criptografada = hash.hexdigest()
+
+        usuario = Usuario("", info_usuario['name'], "", "", "", "", "", info_usuario['email'], senha_criptografada, 0, "", "", "", "")
+
+        id = None
+
+        if usuario.nome and usuario.email and usuario.senha:
+            id = dao.Inserir(usuario)
+
+        if id is None or id <= 0:
+            flash("Erro ao cadastrar usuário.", "danger")
+            return redirect(url_for("login"))
+        else:
+            user = Usuario.getEstado()
+
+    session['logado'] = {
+        'cpf': user[1],
+        'nome': user[2],
+        'email': user[8],
+        'estado_sessao': user[14]
+    }
+
+    revoke = requests.post('https://oauth2.googleapis.com/revoke',
+                               params={'token': credentials.token},
+                               headers={'content-type': 'application/x-www-form-urlencoded'})
+    return redirect('painel')
+
+
+
 @app.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
     if request.method == 'POST':
@@ -113,14 +200,14 @@ def cadastro():
         cpf = request.form['cpf']
         cep = request.form['cep']
         cidade = request.form['cidade']
-        idade = request.form['dt_nasc']
+        dt_nasc = request.form['dt_nasc']
         tipo_sanguineo = request.form['tipo_sanguineo']
         peso = request.form['peso']
         telefone = request.form['telefone']
         opcao_doacao = request.form['opcao_doacao']
         senha = request.form['senha']
 
-        usuario = Usuario(cpf, nome, idade, peso, tipo_sanguineo, cep, cidade, email, senha, 0, telefone, opcao_doacao)
+        usuario = Usuario(cpf, nome, dt_nasc, peso, tipo_sanguineo, cep, cidade, email, senha, 0, telefone, opcao_doacao)
         dao = UsuarioDAO(get_db())
         codigo = dao.Inserir(usuario)
         print(codigo)
@@ -146,10 +233,10 @@ def login():
 
         if usuario is not None:
             session['logado'] = {
-                'cpf': usuario[0],
-                'nome': usuario[1],
-                'email': usuario[7],
-                'estado_sessao': usuario[13]
+                'cpf': usuario[1],
+                'nome': usuario[2],
+                'email': usuario[8],
+                'estado_sessao': usuario[14]
             }
             return redirect(url_for('painel'))
         else:
@@ -237,6 +324,7 @@ def historico_doencas():
 def listar_usuario():
     dao = UsuarioDAO(get_db())
     usuarios_db = dao.Listar()
+    print(usuarios_db)
     return render_template("listar_usuario.html", usuarios=usuarios_db)
 
 
@@ -270,8 +358,8 @@ def listar_doencas():
 
 # Funções de UPDATE
 
-@app.route('/atualizar_usuario/<cpf>', methods=['GET', 'POST'])
-def atualizar_usuario(cpf):
+@app.route('/atualizar_usuario, <int:codigo>', methods=['GET', 'POST'])
+def atualizar_usuario(codigo):
     dao = UsuarioDAO(get_db())
 
     if request.method == "POST":
@@ -288,7 +376,7 @@ def atualizar_usuario(cpf):
         senha = request.form['senha']
 
         usuario = Usuario(cpf, nome, idade, peso, tipo_sanguineo, cep, cidade, email, senha, telefone, situacao_doacao)
-        usuario.setCpf(cpf)
+        usuario.setCodigo(codigo)
         ret = dao.Atualizar(usuario)
 
         if ret > 0:
@@ -297,11 +385,12 @@ def atualizar_usuario(cpf):
             flash("Erro ao atualizar!", "danger")
 
 
-    usuario_db = dao.Listar(cpf)
-    return render_template("perfil_usuario.html", usuario = usuario_db)
+    usuario_db = dao.Listar(codigo)
+    vartitulo = "Atualizar_usuario"
+    return render_template("atualizar_usuario.html", titulo=vartitulo, usuario = usuario_db)
 
 
-@app.route('/atualizar_solicitacao/<codigo>', methods=['GET', 'POST'])
+@app.route('/atualizar_solicitacao, <codigo>', methods=['GET', 'POST'])
 def atualizar_solicitacao(codigo):
     dao = SolicitacaoDAO(get_db())
 
@@ -354,24 +443,35 @@ def doar_solicitacao(codigo):
 
 @app.route('/excluir_solicitacao/<codigo>', methods=['GET',])
 def excluir_solicitacao(codigo):
-    dao = Solicitacao(get_db())
+    dao = SolicitacaoDAO(get_db())
     ret = dao.Excluir(codigo)
     if ret == 1:
         flash(f"Solicitação {codigo} excluída com sucesso!", "success")
     else:
         flash(f"Erro ao excluir solicitação {codigo}.", "danger")
-    return redirect(url_for('solicitacoes.html'))
+    return redirect(url_for('listar_solicitacoes'))
+
+
+@app.route('/excluir_usuario/<codigo>', methods=['GET',])
+def excluir_usuario(codigo):
+    dao = UsuarioDAO(get_db())
+    ret = dao.Excluir(codigo)
+    if ret == 1:
+        flash(f"Conta excluída com sucesso!", "success")
+    else:
+        flash(f"Erro ao excluir Conta.", "danger")
+    return redirect(url_for('logout'))
 
 
 @app.route('/excluir_doenca/<codigo>', methods=['GET',])
 def excluir_doenca(codigo):
-    dao = UsuarioDoenca(get_db())
+    dao = UsuarioDoencaDAO(get_db())
     ret = dao.Excluir(codigo)
     if ret == 1:
         flash(f"Estado de saúde {codigo} excluído com sucesso!", "success")
     else:
         flash(f"Erro ao excluir estado de saúde{codigo}.", "danger")
-    return redirect(url_for('perfil_usuario.html'))
+    return redirect(url_for('atualizar_usuario.html'))
 
 
 # HOST

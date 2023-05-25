@@ -1,9 +1,9 @@
 class Usuario():
-    def __init__(self, cpf, nome, idade, peso, tipo_sanguineo, cep, cidade, email, senha, telefone="", opcao_doacao="", estado_doacao="",  nivel_usuario="", estado_sessao=""):
-        self.id = 0
+    def __init__(self, cpf, nome, dt_nasc, peso, tipo_sanguineo, cep, cidade, email, senha, telefone="", opcao_doacao="", estado_doacao="",  nivel_usuario="", estado_sessao=""):
+        self.codigo = 0
         self.cpf = cpf
         self.nome = nome
-        self.idade = idade
+        self.dt_nasc = dt_nasc
         self.peso = peso
         self.tipo_sanguineo = tipo_sanguineo
         self.cep = cep
@@ -17,11 +17,11 @@ class Usuario():
         self.estado_sessao = estado_sessao
 
 
-    def setId(self, id):
-        self.id = id
+    def setCodigo(self, codigo):
+        self.codigo = codigo
 
-    def getId(self):
-        self.id
+    def getCodigo(self):
+        self.codigo
 
 
     def getCpf(self):
@@ -38,11 +38,11 @@ class Usuario():
         self.nome = nome
 
 
-    def getIdade(self):
-        return self.idade
+    def getDt_nasc(self):
+        return self.dt_nasc
 
-    def setIdade(self, idade):
-        self.idade = idade
+    def setDt_nasc(self, dt_nasc):
+        self.dt_nasc = dt_nasc
 
 
     def getPeso(self):
@@ -60,10 +60,10 @@ class Usuario():
 
 
     def getEstado(self):
-        return self.estado
+        return self.estado_sessao
 
     def setEstado(self, estado):
-        self.estado = estado
+        self.estado_sessao = estado
 
 
     def getCidade(self):

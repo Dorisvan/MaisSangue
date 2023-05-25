@@ -597,6 +597,8 @@ h6 {
 section {
   padding: 60px 0;
   overflow: hidden;
+  position: static;
+
 }
 
 .section-bg {
@@ -1838,4 +1840,8 @@ section {
   background: #c50303;
   color: #fff;
   text-decoration: none;
+}
+.icon-google{
+position: relative
+width: 400px
 }

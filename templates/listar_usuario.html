@@ -31,7 +31,6 @@
       {% if usuarios %}
         {% for a in usuarios %}
           <tr>
-            <td>{{ a[0] }}</td>
             <td>{{ a[1] }}</td>
             <td>{{ a[2] }}</td>
             <td>{{ a[3] }}</td>
@@ -41,7 +40,8 @@
             <td>{{ a[7] }}</td>
             <td>{{ a[8] }}</td>
             <td>{{ a[9] }}</td>
-            <td> <a href="{{ url_for('excluir_solicitacao', codigo=a[0]) }}">Excluir</a>|<a href="{{ url_for('atualizar_usuario', cpf=a[0]) }}">Editar</a></td>
+            <td>{{ a[10] }}</td>
+            <td> <a href="{{ url_for('excluir_usuario', codigo=a[0]) }}">Excluir</a>|<a href="{{ url_for('atualizar_usuario', codigo=a[0]) }}">Editar</a></td>
           </tr>
         {% endfor %}
       {% else %}
@@ -50,4 +50,5 @@
       </tbody>
     </table>
   </div>
+
 {% endblock tudo %}

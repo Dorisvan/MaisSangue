@@ -1,0 +1,3 @@
+Id do cliente: 578342077117-29oc23tg5krfm0mrh690e0pses9joats.apps.googleusercontent.com
+
+Secret key: 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

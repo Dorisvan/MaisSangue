@@ -5,10 +5,10 @@ class UsuarioDAO():
     # CRUD --> Create, Retrieve, Uptade, Delete <--
     def Inserir(self, usuario):
         try:
-            sql = "INSERT INTO Usuario(cpf, nome, idade, peso, tipo_sanguineo, cep, cidade, email, senha, telefone, opcao_doacao, estado_sessao) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            sql = "INSERT INTO Usuario(cpf, nome, dt_nasc, peso, tipo_sanguineo, cep, cidade, email, senha, telefone, opcao_doacao, estado_sessao) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
             cursor = self.con.cursor()
-            cursor.execute(sql, (usuario.cpf, usuario.nome, usuario.idade, usuario.peso, usuario.tipo_sanguineo, usuario.cep, usuario.cidade, usuario.email, usuario.senha, usuario.telefone, usuario.opcao_doacao, usuario.estado_sessao))
+            cursor.execute(sql, (usuario.cpf, usuario.nome, usuario.dt_nasc, usuario.peso, usuario.tipo_sanguineo, usuario.cep, usuario.cidade, usuario.email, usuario.senha, usuario.telefone, usuario.opcao_doacao, usuario.estado_sessao))
 
             self.con.commit()
 
@@ -20,13 +20,13 @@ class UsuarioDAO():
             return 0
 
 
-    def Listar(self, cpf=None):
+    def Listar(self, codigo=None):
         try:
             cursor = self.con.cursor()
-            if cpf != None:
+            if codigo != None:
                 # pegar somente uma planta
-                sql = "SELECT * FROM Usuario WHERE cpf=%s"
-                cursor.execute(sql, (cpf,))
+                sql = "SELECT * FROM Usuario WHERE codigo=%s"
+                cursor.execute(sql, (codigo,))
                 usuario = cursor.fetchone()
                 return usuario
             else:
@@ -38,20 +38,41 @@ class UsuarioDAO():
         except:
             return None
 
+
+    def Buscar_email(self, email):
+        sql = "SELECT * FROM Usuario WHERE email=%s"
+
+        cursor = self.con.cursor()
+        cursor.execute(sql, (email,))
+
+        return cursor.fetchone()
+
     def Atualizar(self, usuario):
         try:
             sql = "UPDATE Usuario " \
                   "SET cpf=%s, nome=%s, " \
                   "idade=%s, peso=%s, tipo_sanguineo=%s, cep=%s, cidade=%s, email=%s, senha=%s, telefone=%s" \
-                  "WHERE cpf=%s"
+                  "WHERE codigo=%s"
 
             cursor = self.con.cursor()
-            cursor.execute(sql, (usuario.cpf, usuario.nome, usuario.idade, usuario.peso, usuario.tipo_sanguineo, usuario.cep, usuario.cidade, usuario.email, usuario.senha, usuario.telefone, usuario.cpf))
+            cursor.execute(sql, (usuario.cpf, usuario.nome, usuario.idade, usuario.peso, usuario.tipo_sanguineo, usuario.cep, usuario.cidade, usuario.email, usuario.senha, usuario.telefone, usuario.codigo))
             self.con.commit()
             return cursor.rowcount
 
         except:
             return 0
+
+
+    def Excluir(self, codigo):
+        try:
+            sql = "DELETE FROM Usuario WHERE codigo = %s"
+            cursor = self.con.cursor()
+            cursor.execute(sql, (codigo,))
+            self.con.commit()
+            return cursor.rowcount
+        except:
+            return 0
+
 
     def autenticar(self, email, senha):
         try:
