@@ -178,7 +178,12 @@ def retorno():
         else:
             user = Usuario.getEstado()
 
-    session['logado'] = user
+    session['logado'] = {
+        'cpf': user[1],
+        'nome': user[2],
+        'email': user[8],
+        'estado_sessao': user[14]
+    }
 
     revoke = requests.post('https://oauth2.googleapis.com/revoke',
                                params={'token': credentials.token},
@@ -319,6 +324,7 @@ def historico_doencas():
 def listar_usuario():
     dao = UsuarioDAO(get_db())
     usuarios_db = dao.Listar()
+    print(usuarios_db)
     return render_template("listar_usuario.html", usuarios=usuarios_db)
 
 
@@ -352,8 +358,8 @@ def listar_doencas():
 
 # Funções de UPDATE
 
-@app.route('/atualizar_usuario, <int:cpf>', methods=['GET', 'POST'])
-def atualizar_usuario(cpf):
+@app.route('/atualizar_usuario, <int:codigo>', methods=['GET', 'POST'])
+def atualizar_usuario(codigo):
     dao = UsuarioDAO(get_db())
 
     if request.method == "POST":
@@ -370,7 +376,7 @@ def atualizar_usuario(cpf):
         senha = request.form['senha']
 
         usuario = Usuario(cpf, nome, idade, peso, tipo_sanguineo, cep, cidade, email, senha, telefone, situacao_doacao)
-        usuario.setCpf(cpf)
+        usuario.setCodigo(codigo)
         ret = dao.Atualizar(usuario)
 
         if ret > 0:
@@ -379,7 +385,7 @@ def atualizar_usuario(cpf):
             flash("Erro ao atualizar!", "danger")
 
 
-    usuario_db = dao.Listar(cpf)
+    usuario_db = dao.Listar(codigo)
     vartitulo = "Atualizar_usuario"
     return render_template("atualizar_usuario.html", titulo=vartitulo, usuario = usuario_db)
 
@@ -446,10 +452,10 @@ def excluir_solicitacao(codigo):
     return redirect(url_for('listar_solicitacoes'))
 
 
-@app.route('/excluir_usuario/<cpf>', methods=['GET',])
-def excluir_usuario(cpf):
+@app.route('/excluir_usuario/<codigo>', methods=['GET',])
+def excluir_usuario(codigo):
     dao = UsuarioDAO(get_db())
-    ret = dao.Excluir(cpf)
+    ret = dao.Excluir(codigo)
     if ret == 1:
         flash(f"Conta excluída com sucesso!", "success")
     else:

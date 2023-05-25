@@ -1,6 +1,6 @@
 class Usuario():
     def __init__(self, cpf, nome, dt_nasc, peso, tipo_sanguineo, cep, cidade, email, senha, telefone="", opcao_doacao="", estado_doacao="",  nivel_usuario="", estado_sessao=""):
-        self.id = 0
+        self.codigo = 0
         self.cpf = cpf
         self.nome = nome
         self.dt_nasc = dt_nasc
@@ -17,11 +17,11 @@ class Usuario():
         self.estado_sessao = estado_sessao
 
 
-    def setId(self, id):
-        self.id = id
+    def setCodigo(self, codigo):
+        self.codigo = codigo
 
-    def getId(self):
-        self.id
+    def getCodigo(self):
+        self.codigo
 
 
     def getCpf(self):

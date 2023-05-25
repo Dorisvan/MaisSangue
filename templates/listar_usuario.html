@@ -41,7 +41,7 @@
             <td>{{ a[8] }}</td>
             <td>{{ a[9] }}</td>
             <td>{{ a[10] }}</td>
-            <td> <a href="{{ url_for('excluir_usuario', cpf=a[1]) }}">Excluir</a>|<a href="{{ url_for('atualizar_usuario', cpf=a[1]) }}">Editar</a></td>
+            <td> <a href="{{ url_for('excluir_usuario', codigo=a[0]) }}">Excluir</a>|<a href="{{ url_for('atualizar_usuario', codigo=a[0]) }}">Editar</a></td>
           </tr>
         {% endfor %}
       {% else %}

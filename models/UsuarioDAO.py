@@ -20,13 +20,13 @@ class UsuarioDAO():
             return 0
 
 
-    def Listar(self, cpf=None):
+    def Listar(self, codigo=None):
         try:
             cursor = self.con.cursor()
-            if cpf != None:
+            if codigo != None:
                 # pegar somente uma planta
-                sql = "SELECT * FROM Usuario WHERE cpf=%s"
-                cursor.execute(sql, (cpf,))
+                sql = "SELECT * FROM Usuario WHERE codigo=%s"
+                cursor.execute(sql, (codigo,))
                 usuario = cursor.fetchone()
                 return usuario
             else:
@@ -52,10 +52,10 @@ class UsuarioDAO():
             sql = "UPDATE Usuario " \
                   "SET cpf=%s, nome=%s, " \
                   "idade=%s, peso=%s, tipo_sanguineo=%s, cep=%s, cidade=%s, email=%s, senha=%s, telefone=%s" \
-                  "WHERE cpf=%s"
+                  "WHERE codigo=%s"
 
             cursor = self.con.cursor()
-            cursor.execute(sql, (usuario.cpf, usuario.nome, usuario.idade, usuario.peso, usuario.tipo_sanguineo, usuario.cep, usuario.cidade, usuario.email, usuario.senha, usuario.telefone, usuario.cpf))
+            cursor.execute(sql, (usuario.cpf, usuario.nome, usuario.idade, usuario.peso, usuario.tipo_sanguineo, usuario.cep, usuario.cidade, usuario.email, usuario.senha, usuario.telefone, usuario.codigo))
             self.con.commit()
             return cursor.rowcount
 
@@ -63,11 +63,11 @@ class UsuarioDAO():
             return 0
 
 
-    def Excluir(self, cpf):
+    def Excluir(self, codigo):
         try:
-            sql = "DELETE FROM Usuario WHERE cpf = %s"
+            sql = "DELETE FROM Usuario WHERE codigo = %s"
             cursor = self.con.cursor()
-            cursor.execute(sql, (cpf,))
+            cursor.execute(sql, (codigo,))
             self.con.commit()
             return cursor.rowcount
         except:
