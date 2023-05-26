@@ -1,14 +1,19 @@
 # Bibliotecas e classes
 import hashlib
 import json
+import smtplib
 
 from flask import Flask, render_template, g, request, redirect, url_for, session, flash
+from email.message import EmailMessage
+
 
 import mysql.connector
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import requests
 import os
+import ssl
+import smptlib
 
 from models.Doacao import Doacao
 from models.DoacaoDAO import DoacaoDAO
@@ -252,6 +257,32 @@ def logout():
     return redirect(url_for('index'))
 
 
+# Função de notificação
+
+@app.route('/notificar',  methods=['GET', 'POST'])
+def notificar(usuario_email, titulo, mensagem):
+    email_inicial = 'MaisSangue@gmail.com'
+    senha_email = os.environ.get("SENHA_EMAIL")
+    email_destinatario = usuario_email
+
+    titulo = titulo
+    mensagem = mensagem
+
+    em = EmailMessage()
+    em['From'] = email_inicial
+    em['To'] = email_destinatario
+    em['Subject'] = titulo
+    em.set_content(mensagem)
+
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(email_inicial, senha_email)
+        smtp.sendmail(email_inicial, email_destinatario, em.as_string())
+
+
+
+
 # Funções de CREATE
 
 @app.route('/solicitar',  methods=['GET', 'POST'])
@@ -317,7 +348,6 @@ def historico_doencas():
 
     return render_template("historico_doencas.html", titulo="Histórico de saúde")
 
-
 # Funções de READ
 
 @app.route('/listar_usuario', methods=['GET',])
@@ -332,6 +362,16 @@ def listar_usuario():
 def listar_solicitacoes():
     dao = SolicitacaoDAO(get_db())
     solicitacoes_db = dao.Listar_Solicitacoes()
+    return render_template("solicitacoes.html", solicitacoes=solicitacoes_db)
+
+
+@app.route('/solicitacoes_busca' , methods=['GET','POST'])
+def solicitacoes_busca():
+    dao = SolicitacaoDAO(get_db())
+    if request.method == 'POST':
+        termo = request.form['termo']
+
+    solicitacoes_db = dao.Busca_avancada(termo)
     return render_template("solicitacoes.html", solicitacoes=solicitacoes_db)
 
 
