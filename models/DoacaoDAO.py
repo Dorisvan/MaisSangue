@@ -22,7 +22,13 @@ class DoacaoDAO():
             cursor.execute(sql, (situacao, Doacao.solicitacao_codigo))
             self.con.commit()
 
-            return codigo
+            sql2 = 'SELECT u.email FROM Usuario as u, Solicitacao as s WHERE s.codigo = %s AND u.codigo = s.Usuario_codigo'
+
+            cursor.execute(sql2, (Doacao.solicitacao_codigo))
+
+            email = cursor.fetchone
+
+            return codigo, email
 
 
         except:

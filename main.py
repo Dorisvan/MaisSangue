@@ -13,7 +13,6 @@ import google_auth_oauthlib.flow
 import requests
 import os
 import ssl
-import smptlib
 
 from models.Doacao import Doacao
 from models.DoacaoDAO import DoacaoDAO
@@ -261,8 +260,8 @@ def logout():
 
 @app.route('/notificar',  methods=['GET', 'POST'])
 def notificar(usuario_email, titulo, mensagem):
-    email_inicial = 'MaisSangue@gmail.com'
-    senha_email = os.environ.get("SENHA_EMAIL")
+    email_inicial = 'maissanguetestes@gmail.com'
+    senha_email = 'xmfxugkbdnekwxkq'
     email_destinatario = usuario_email
 
     titulo = titulo
@@ -279,7 +278,6 @@ def notificar(usuario_email, titulo, mensagem):
     with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
         smtp.login(email_inicial, senha_email)
         smtp.sendmail(email_inicial, email_destinatario, em.as_string())
-
 
 
 

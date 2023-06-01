@@ -16,10 +16,10 @@ class SolicitacaoDAO():
 
     def Inserir(self, Solicitacao):
         try:
-            sql = "INSERT INTO Solicitacao(data, urgencia, local_internacao, situacao, usuario_cpf) VALUES (%s, %s, %s, %s, %s)"
+            sql = "INSERT INTO Solicitacao(data, urgencia, local_internacao, situacao, usuario_codigo) VALUES (%s, %s, %s, %s, %s)"
 
             cursor = self.con.cursor()
-            cursor.execute(sql, (Solicitacao.data, Solicitacao.urgencia, Solicitacao.local_internacao, Solicitacao.situacao, Solicitacao.usuario_cpf))
+            cursor.execute(sql, (Solicitacao.data, Solicitacao.urgencia, Solicitacao.local_internacao, Solicitacao.situacao, Solicitacao.usuario_codigo))
 
             self.con.commit()
 
