@@ -313,15 +313,19 @@ def doar():
     if request.method == 'POST':
         data = request.form['data']
         local_destino = request.form['local_destino']
-        usuario_cpf= request.form['usuario_cpf']
+        usuario_codigo = request.form['usuario_cpf']
         solicitacao_codigo = request.form['solicitacao_codigo']
 
-        doacao = Doacao(data, local_destino, usuario_cpf, solicitacao_codigo)
+        doacao = Doacao(data, local_destino, solicitacao_codigo, usuario_codigo)
         dao = DoacaoDAO(get_db())
-        codigo = dao.Inserir(doacao)
+        codigo, email = dao.Inserir(doacao)
 
         if codigo > 0:
             flash("Doação cadastrada com sucesso! Código %d" % codigo, "success")
+            titulo = "Solicitação atendida."
+            informe = "Caro usuário, sua solicitação acaba de ser atendida. Consulte a agência a qual você está vinculado."
+
+            notificar(email, titulo, informe)
         else:
             flash("Erro ao cadastrar doação! Verifique as informações novamente.", "danger")
 

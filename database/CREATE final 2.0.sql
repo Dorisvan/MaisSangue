@@ -44,7 +44,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `Doacaodb`.`Solicitacao` (
   `codigo` BIGINT NOT NULL AUTO_INCREMENT,
   `data` DATE NOT NULL,
-  `urgencia` INT NOT NULL,
+  `urgencia` VARCHAR(20) NOT NULL,
   `local_internacao` VARCHAR(200) NOT NULL,
   `situacao` VARCHAR(45) NOT NULL,
   `Usuario_codigo` BIGINT NOT NULL,
