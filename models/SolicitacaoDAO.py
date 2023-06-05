@@ -6,15 +6,9 @@ class SolicitacaoDAO():
 
     def Listar_Solicitacoes(self):
         cursor = self.con.cursor()
-        Extrema = "Extrema"
-        Alta = "Alta"
-        Media = "Média"
-        Baixa = "Baixa"
-
-        Urgencia = "urgencia"
         try:
-            sql = "SELECT s.codigo, s.data, s.local_internacao, u.tipo_sanguineo, s.situacao, CASE WHEN s.urgencia = 4 THEN  %s WHEN s.urgencia = 3 THEN  %s WHEN s.urgencia = 2 THEN  %s WHEN s.urgencia = 1 THEN  %s END as %s FROM Solicitacao as s, Usuario as u WHERE s.Usuario_cpf = u.cpf GROUP BY s.codigo, u.tipo_sanguineo, s.situacao"
-            cursor.execute(sql, (Extrema, Alta, Media, Baixa, Urgencia) )
+            sql = "SELECT s.codigo, s.data, s.urgencia, s.local_internacao, u.tipo_sanguineo, s.situacao FROM Solicitacao as s, Usuario as u WHERE s.Usuario_codigo = u.codigo GROUP BY s.codigo, u.tipo_sanguineo, s.situacao"
+            cursor.execute(sql, )
             solicitacoes = cursor.fetchall()
             return solicitacoes
         except:
@@ -22,10 +16,10 @@ class SolicitacaoDAO():
 
     def Inserir(self, Solicitacao):
         try:
-            sql = "INSERT INTO Solicitacao(data, urgencia, local_internacao, situacao, usuario_cpf) VALUES (%s, %s, %s, %s, %s)"
+            sql = "INSERT INTO Solicitacao(data, urgencia, local_internacao, situacao, usuario_codigo) VALUES (%s, %s, %s, %s, %s)"
 
             cursor = self.con.cursor()
-            cursor.execute(sql, (Solicitacao.data, Solicitacao.urgencia, Solicitacao.local_internacao, Solicitacao.situacao, Solicitacao.usuario_cpf))
+            cursor.execute(sql, (Solicitacao.data, Solicitacao.urgencia, Solicitacao.local_internacao, Solicitacao.situacao, Solicitacao.usuario_codigo))
 
             self.con.commit()
 
@@ -96,3 +90,15 @@ class SolicitacaoDAO():
             return cursor.rowcount
         except:
             return 0
+
+    def Busca_avancada(self, termo):
+        try:
+            sql = "SELECT * FROM Solicitacao WHERE codigo LIKE %s OR data LIKE %s OR urgencia LIKE %s OR local_internacao LIKE %s OR situacao LIKE %s"
+            sql2 = "SELECT DISTINCT s.codigo, s.data, s.urgencia, s.local_internacao, u.tipo_sanguineo, s.situacao FROM Solicitacao as s, Usuario as u WHERE s.Usuario_codigo = u.codigo AND s.codigo LIKE %s OR s.data LIKE %s OR s.urgencia LIKE %s OR s.local_internacao LIKE %s OR u.tipo_sanguineo LIKE %s OR s.situacao LIKE %s"
+            cursor = self.con.cursor()
+            cursor.execute(sql2, (termo, termo, termo, termo, termo, termo,))
+            resultado = cursor.fetchall()
+
+            return resultado
+        except:
+            return("Não há nenhuma solicitação com esse dado informado no sistema.")

@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `Doacaodb`.`Usuario` (
   `cep` VARCHAR(30) NOT NULL,
   `cidade` VARCHAR(100) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
-  `senha` VARCHAR(45) NOT NULL,
+  `senha` VARCHAR(150) NOT NULL,
   `telefone` VARCHAR(25) NULL,
   `opcao_doacao` VARCHAR(10) NULL,
   `estado_doacao` VARCHAR(20) NULL,
@@ -44,7 +44,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `Doacaodb`.`Solicitacao` (
   `codigo` BIGINT NOT NULL AUTO_INCREMENT,
   `data` DATE NOT NULL,
-  `urgencia` INT NOT NULL,
+  `urgencia` VARCHAR(20) NOT NULL,
   `local_internacao` VARCHAR(200) NOT NULL,
   `situacao` VARCHAR(45) NOT NULL,
   `Usuario_codigo` BIGINT NOT NULL,

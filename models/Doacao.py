@@ -1,8 +1,8 @@
 class Doacao():
-    def __init__(self, data, local_destino, usuario_cpf, solicitacao_codigo):
+    def __init__(self, data, local_destino, solicitacao_codigo, usuario_codigo):
         self.data = data
         self.local_destino = local_destino
-        self.usuario_cpf = usuario_cpf
+        self.usuario_codigo = usuario_codigo
         self.solicitacao_codigo = solicitacao_codigo
 
     def getData(self):
@@ -18,8 +18,8 @@ class Doacao():
         self.local_destino = local_destino
 
 
-    def setUsuario_cpf(self, usuario_cpf):
-        self.usuario_cpf = usuario_cpf
+    def setUsuario_codigo(self, usuario_codigo):
+        self.usuario_codigo = usuario_codigo
 
-    def getUsuario_cpf(self):
-        return self.usuario_cpf
+    def getUsuario_codigo(self):
+        return self.usuario_codigo

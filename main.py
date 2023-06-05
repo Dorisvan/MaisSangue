@@ -1,14 +1,18 @@
 # Bibliotecas e classes
 import hashlib
 import json
+import smtplib
 
 from flask import Flask, render_template, g, request, redirect, url_for, session, flash
+from email.message import EmailMessage
+
 
 import mysql.connector
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import requests
 import os
+import ssl
 
 from models.Doacao import Doacao
 from models.DoacaoDAO import DoacaoDAO
@@ -176,7 +180,7 @@ def retorno():
             flash("Erro ao cadastrar usuário.", "danger")
             return redirect(url_for("login"))
         else:
-            user = Usuario.getEstado()
+            user = dao.autenticar(usuario.email, usuario.senha)
 
     session['logado'] = {
         'cpf': user[1],
@@ -184,6 +188,9 @@ def retorno():
         'email': user[8],
         'estado_sessao': user[14]
     }
+
+    dict = session.get('logado')
+    print(dict['nome'])
 
     revoke = requests.post('https://oauth2.googleapis.com/revoke',
                                params={'token': credentials.token},
@@ -252,6 +259,31 @@ def logout():
     return redirect(url_for('index'))
 
 
+# Função de notificação
+
+@app.route('/notificar',  methods=['GET', 'POST'])
+def notificar(usuario_email, titulo, mensagem):
+    email_inicial = 'maissanguetestes@gmail.com'
+    senha_email = 'xmfxugkbdnekwxkq'
+    email_destinatario = usuario_email
+
+    titulo = titulo
+    mensagem = mensagem
+
+    em = EmailMessage()
+    em['From'] = email_inicial
+    em['To'] = email_destinatario
+    em['Subject'] = titulo
+    em.set_content(mensagem)
+
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(email_inicial, senha_email)
+        smtp.sendmail(email_inicial, email_destinatario, em.as_string())
+
+
+
 # Funções de CREATE
 
 @app.route('/solicitar',  methods=['GET', 'POST'])
@@ -284,15 +316,19 @@ def doar():
     if request.method == 'POST':
         data = request.form['data']
         local_destino = request.form['local_destino']
-        usuario_cpf= request.form['usuario_cpf']
+        usuario_codigo = request.form['usuario_cpf']
         solicitacao_codigo = request.form['solicitacao_codigo']
 
-        doacao = Doacao(data, local_destino, usuario_cpf, solicitacao_codigo)
+        doacao = Doacao(data, local_destino, solicitacao_codigo, usuario_codigo)
         dao = DoacaoDAO(get_db())
-        codigo = dao.Inserir(doacao)
+        codigo, email = dao.Inserir(doacao)
 
         if codigo > 0:
             flash("Doação cadastrada com sucesso! Código %d" % codigo, "success")
+            titulo = "Solicitação atendida."
+            informe = "Caro usuário, sua solicitação acaba de ser atendida. Consulte a agência a qual você está vinculado."
+
+            notificar(email, titulo, informe)
         else:
             flash("Erro ao cadastrar doação! Verifique as informações novamente.", "danger")
 
@@ -317,7 +353,6 @@ def historico_doencas():
 
     return render_template("historico_doencas.html", titulo="Histórico de saúde")
 
-
 # Funções de READ
 
 @app.route('/listar_usuario', methods=['GET',])
@@ -333,6 +368,26 @@ def listar_solicitacoes():
     dao = SolicitacaoDAO(get_db())
     solicitacoes_db = dao.Listar_Solicitacoes()
     return render_template("solicitacoes.html", solicitacoes=solicitacoes_db)
+
+
+@app.route('/solicitacoes_busca' , methods=['GET','POST'])
+def solicitacoes_busca():
+    dao = SolicitacaoDAO(get_db())
+    if request.method == 'POST':
+        termo = request.form['termo']
+
+    solicitacoes_db = dao.Busca_avancada(termo)
+    return render_template("solicitacoes.html", solicitacoes=solicitacoes_db)
+
+
+@app.route('/usuarios_busca' , methods=['GET','POST'])
+def usuarios_busca():
+    dao = UsuarioDAO(get_db())
+    if request.method == 'POST':
+        termo = request.form['termo']
+
+    usuarios_db = dao.Busca_avancada(termo)
+    return render_template("listar_usuario.html", usuarios=usuarios_db)
 
 
 @app.route('/doacoes', methods=['GET',])

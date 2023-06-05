@@ -13,6 +13,17 @@
 
   <div class="reply-form" style="text-align: center">
 
+    <form action="{{ url_for('solicitacoes_busca') }}" method="POST" >
+          <div class="row">
+            <div class="col-md-4 form-group container">
+              <label for="termo"></label>
+              <input type="text" name="termo" class="form-control" id="termo" placeholder="Pesquisa" required>
+              <div class="validate"></div>
+            </div>
+            <button class="botao-cadastro" type="submit">Buscar</button>
+          </div>
+    </form>
+
     <table class="table">
       <thead>
         <th style="color: #e93138">Código</th>
@@ -29,11 +40,10 @@
           <tr>
             <td>{{ s[0] }}</td>
             <td>{{ s[1] }}</td>
-            <td>{{ s[5] }}</td>
             <td>{{ s[2] }}</td>
             <td>{{ s[3] }}</td>
             <td>{{ s[4] }}</td>
-            <td> <a href="{{ url_for('excluir_solicitacao', codigo=s[0]) }}">Excluir</a>|<a href="{{ url_for('atualizar_solicitacao', codigo=s[0]) }}">Editar</a>  <!--<a href="{{ url_for('doar_solicitacao', codigo=s[0]) }}">Doar</a> </td>-->
+            <td>{{ s[5] }}</td>
           </tr>
         {% endfor %}
       {% else %}

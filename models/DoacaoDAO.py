@@ -5,10 +5,10 @@ class DoacaoDAO():
     # CRUD --> Create, Retrieve, Uptade, Delete <--
     def Inserir(self, Doacao):
         try:
-            sql = "INSERT INTO Doacao(data, local_destino, usuario_cpf, solicitacao_codigo) VALUES (%s, %s, %s, %s)"
+            sql = "INSERT INTO Doacao(data, local_destino, solicitacao_codigo, usuario_codigo) VALUES (%s, %s, %s, %s)"
 
             cursor = self.con.cursor()
-            cursor.execute(sql, (Doacao.data, Doacao.local_destino, Doacao.usuario_cpf, Doacao.solicitacao_codigo))
+            cursor.execute(sql, (Doacao.data, Doacao.local_destino, Doacao.solicitacao_codigo, Doacao.usuario_codigo))
 
             self.con.commit()
 
@@ -19,14 +19,22 @@ class DoacaoDAO():
             sql = "UPDATE Solicitacao SET situacao=%s WHERE codigo=%s"
 
             cursor = self.con.cursor()
-            cursor.execute(sql, (situacao, Doacao.solicitacao_codigo))
+            cursor.execute(sql, (situacao, Doacao.solicitacao_codigo,))
             self.con.commit()
 
-            return codigo
+            cursor = self.con.cursor()
+            sql2 = 'SELECT u.email FROM Usuario as u, Solicitacao as s ' \
+                   'WHERE u.codigo = s.Usuario_codigo AND s.codigo = %s'
+
+            cursor.execute(sql2, (Doacao.solicitacao_codigo,))
+
+            email = cursor.fetchone()
+
+            return (codigo, email)
 
 
         except:
-            return 0
+            return 0, 0
 
     def Listar_por_data(self, cpf=None):
         try:

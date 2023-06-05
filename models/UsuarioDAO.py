@@ -47,6 +47,20 @@ class UsuarioDAO():
 
         return cursor.fetchone()
 
+
+    def Busca_avancada(self, termo):
+        try:
+            sql = "SELECT * FROM Solicitacao WHERE codigo LIKE %s OR data LIKE %s OR urgencia LIKE %s OR local_internacao LIKE %s OR situacao LIKE %s"
+            sql2 = "SELECT DISTINCT * FROM Usuario as u WHERE u.codigo LIKE %s OR u.cpf LIKE %s OR u.nome LIKE %s OR u.dt_nasc LIKE %s OR u.peso LIKE %s OR u.tipo_sanguineo LIKE %s OR u.cep LIKE %s OR u.cidade LIKE %s OR u.email LIKE %s OR u.senha LIKE %s OR u.telefone LIKE %s OR u.opcao_doacao LIKE %s OR u.estado_doacao LIKE %s OR u.nivel_usuario LIKE %s"
+            cursor = self.con.cursor()
+            cursor.execute(sql2, (termo, termo, termo, termo, termo, termo, termo, termo, termo, termo, termo, termo, termo, termo))
+            resultado = cursor.fetchall()
+
+            return resultado
+        except:
+            return("Não há nenhum usuário com esse dado informado no sistema.")
+
+
     def Atualizar(self, usuario):
         try:
             sql = "UPDATE Usuario " \

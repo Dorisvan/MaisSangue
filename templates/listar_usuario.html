@@ -13,6 +13,17 @@
 
   <div class="reply-form" style="text-align: center">
 
+    <form action="{{ url_for('usuarios_busca') }}" method="POST" >
+          <div class="row">
+            <div class="col-md-4 form-group container">
+              <label for="termo"></label>
+              <input type="text" name="termo" class="form-control" id="termo" placeholder="Pesquisa" required>
+              <div class="validate"></div>
+            </div>
+            <button class="botao-cadastro" type="submit">Buscar</button>
+          </div>
+    </form>
+
     <table class="table">
       <thead>
         <th style="color: #e93138">CPF</th>
