@@ -32,10 +32,10 @@
             <div class="col-md-4 form-group mt-3 mt-md-0 container">
               <label for="urgencia"></label>
               <select name="urgencia" id="urgencia" class="form-select">
-                <option value="4" {% if solicitacao[2] == 4 %}{{ "selected" }}{% endif %}>Extrema</option>
-                <option value="3" {% if solicitacao[2] == 3 %}{{ "selected" }}{% endif %}>Alta</option>
-                <option value="2" {% if solicitacao[2] == 2 %}{{ "selected" }}{% endif %}>Média</option>
-                <option value="1" {% if solicitacao[2] == 1 %}{{ "selected" }}{% endif %}>Baixa</option>
+                <option value="Extrema" {% if solicitacao[2] == 'Extrema' %}{{ "selected" }}{% endif %}>Extrema</option>
+                <option value="Alta" {% if solicitacao[2] == 'Alta' %}{{ "selected" }}{% endif %}>Alta</option>
+                <option value="Média" {% if solicitacao[2] == 'Média' %}{{ "selected" }}{% endif %}>Média</option>
+                <option value="Baixa" {% if solicitacao[2] == 'Baixa' %}{{ "selected" }}{% endif %}>Baixa</option>
               </select>
             </div>
           </div>
@@ -55,8 +55,8 @@
 
           <div class="row">
             <div class="col-md-4 form-group mt-3 container">
-              <label for="usuario_cpf"></label>
-              <input type="text" value="{{ solicitacao[5] }}" class="form-control" name="usuario_cpf" id="usuario_cpf" placeholder="CPF do usuário">
+              <label for="usuario_codigo"></label>
+              <input type="text" value="{{ solicitacao[5] }}" class="form-control" name="usuario_codigo" id="usuario_codigo" placeholder="Código do usuário">
               <div class="validate"></div>
             </div>
           </div>

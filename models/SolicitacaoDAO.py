@@ -51,11 +51,11 @@ class SolicitacaoDAO():
         try:
             sql = "UPDATE Solicitacao " \
                   "SET data=%s, urgencia=%s, " \
-                  "local_internacao=%s, situacao=%s, usuario_cpf=%s" \
+                  "local_internacao=%s, situacao=%s, usuario_codigo=%s" \
                   "WHERE codigo=%s"
 
             cursor = self.con.cursor()
-            cursor.execute(sql, (Solicitacao.data, Solicitacao.urgencia, Solicitacao.local_internacao, Solicitacao.situacao, Solicitacao.usuario_cpf, Solicitacao.id))
+            cursor.execute(sql, (Solicitacao.data, Solicitacao.urgencia, Solicitacao.local_internacao, Solicitacao.situacao, Solicitacao.usuario_codigo, Solicitacao.id))
             self.con.commit()
             return cursor.rowcount
         except:

@@ -64,20 +64,13 @@ class DoacaoDAO():
         try:
             cursor = self.con.cursor()
             if codigo != None:
-                # pegar somente uma planta
                 sql = "SELECT * FROM Doacao WHERE codigo=%s"
                 cursor.execute(sql, (codigo,))
                 doacao = cursor.fetchone()
                 return doacao
             else:
-                Extrema = "Extrema"
-                Alta = "Alta"
-                Media = "Média"
-                Baixa = "Baixa"
-                Urgencia = "urgencia"
-
-                sql = "SELECT d.codigo, d.data, d.local_destino, u.tipo_sanguineo, CASE WHEN s.urgencia = 1 THEN  %s WHEN s.urgencia = 2 THEN  %s WHEN s.urgencia = 3 THEN  %s WHEN s.urgencia = 4 THEN  %s END as %s FROM Doacao as d, Usuario as u, Solicitacao as s WHERE d.Usuario_cpf = u.cpf GROUP BY u.tipo_sanguineo"
-                cursor.execute(sql, (Extrema, Alta, Media, Baixa, Urgencia))
+                sql = "SELECT d.codigo, d.data, d.local_destino, u.tipo_sanguineo, solicitacao_codigo  FROM Doacao as d, Usuario as u WHERE d.Usuario_codigo = u.codigo ORDER BY u.tipo_sanguineo"
+                cursor.execute(sql,)
                 doacoes = cursor.fetchall()
                 return doacoes
         except:

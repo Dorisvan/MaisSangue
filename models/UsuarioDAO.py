@@ -65,11 +65,11 @@ class UsuarioDAO():
         try:
             sql = "UPDATE Usuario " \
                   "SET cpf=%s, nome=%s, " \
-                  "idade=%s, peso=%s, tipo_sanguineo=%s, cep=%s, cidade=%s, email=%s, senha=%s, telefone=%s" \
+                  "dt_nasc=%s, peso=%s, tipo_sanguineo=%s, cep=%s, cidade=%s, email=%s, senha=%s, telefone=%s, opcao_doacao=%s" \
                   "WHERE codigo=%s"
 
             cursor = self.con.cursor()
-            cursor.execute(sql, (usuario.cpf, usuario.nome, usuario.idade, usuario.peso, usuario.tipo_sanguineo, usuario.cep, usuario.cidade, usuario.email, usuario.senha, usuario.telefone, usuario.codigo))
+            cursor.execute(sql, (usuario.cpf, usuario.nome, usuario.dt_nasc, usuario.peso, usuario.tipo_sanguineo, usuario.cep, usuario.cidade, usuario.email, usuario.senha, usuario.telefone, usuario.opcao_doacao, usuario.codigo))
             self.con.commit()
             return cursor.rowcount
 

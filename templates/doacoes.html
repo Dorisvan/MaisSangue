@@ -19,6 +19,7 @@
         <th style="color: #e93138">Data</th>
         <th style="color: #e93138">Local da internação</th>
         <th style="color: #e93138">Tipo sanguìneo</th>
+        <th style="color: #e93138">Código da solicitação</th>
       </thead>
       <tbody>
       {% if doacoes %}
@@ -28,6 +29,8 @@
             <td>{{ d[1] }}</td>
             <td>{{ d[2] }}</td>
             <td>{{ d[3] }}</td>
+            <td>{{ d[4] }}</td>
+            <td></td>
           </tr>
         {% endfor %}
       {% else %}

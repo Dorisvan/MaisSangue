@@ -84,8 +84,8 @@
             </div>
 
             <div class="col-md-4 form-group mt-3 container">
-                <label for="situacao_doacao"></label>
-                <select name="situacao_doacao" id="situacao_doacao" class="form-select">
+                <label for="opcao_doacao"></label>
+                <select name="opcao_doacao" id="opcao_doacao" class="form-select">
                 <option value="">Deseja ser um doador?</option>
                 <option value="Sim" {% if usuario[11] == "Sim" %}{{ "selected" }}{% endif %}>Sim</option>
                 <option value="Não" {% if usuario[11] == "Não" %}{{ "selected" }}{% endif %}>Não</option>
@@ -96,15 +96,6 @@
           </div>
 
           <div class="row">
-            <div class="col-md-4 form-group mt-3 container">
-              <label for="nivel"></label>
-              <select name="nivel" id="nivel" class="form-select">
-                <option value="">Você é um usuário ou uma instituição?</option>
-                <option value="0" {% if usuario[12] == "0" %}{{ "selected" }}{% endif %}>Hospital</option>
-                <option value="0" {% if usuario[12] == "0" %}{{ "selected" }}{% endif %}>Usuário independente</option>
-              </select>
-            </div>
-
             <div class="col-md-4 form-group mt-3 container">
               <label for="senha"></label>
               <input type="password" class="form-control" name="senha" value="{{ usuario[9] }}" id="senha" placeholder="Senha">

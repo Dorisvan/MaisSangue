@@ -5,6 +5,7 @@ import smtplib
 
 from flask import Flask, render_template, g, request, redirect, url_for, session, flash
 from email.message import EmailMessage
+from datetime import date
 
 
 import mysql.connector
@@ -183,14 +184,13 @@ def retorno():
             user = dao.autenticar(usuario.email, usuario.senha)
 
     session['logado'] = {
+        'codigo': usuario[0],
         'cpf': user[1],
         'nome': user[2],
         'email': user[8],
         'estado_sessao': user[14]
     }
 
-    dict = session.get('logado')
-    print(dict['nome'])
 
     revoke = requests.post('https://oauth2.googleapis.com/revoke',
                                params={'token': credentials.token},
@@ -240,6 +240,7 @@ def login():
 
         if usuario is not None:
             session['logado'] = {
+                'codigo': usuario[0],
                 'cpf': usuario[1],
                 'nome': usuario[2],
                 'email': usuario[8],
@@ -294,10 +295,10 @@ def solicitar():
         data = request.form['data']
         urgencia = request.form['urgencia']
         local_internacao = request.form['local_internacao']
-        usuario_cpf = request.form['usuario_cpf']
+        usuario_codigo = request.form['usuario_codigo']
         situacao = "Pendente"
 
-        solicitacao = Solicitacao(data, urgencia, local_internacao, situacao, usuario_cpf)
+        solicitacao = Solicitacao(data, urgencia, local_internacao, situacao, usuario_codigo)
 
         dao = SolicitacaoDAO(get_db())
         codigo = dao.Inserir(solicitacao)
@@ -316,7 +317,7 @@ def doar():
     if request.method == 'POST':
         data = request.form['data']
         local_destino = request.form['local_destino']
-        usuario_codigo = request.form['usuario_cpf']
+        usuario_codigo = request.form['usuario_codigo']
         solicitacao_codigo = request.form['solicitacao_codigo']
 
         doacao = Doacao(data, local_destino, solicitacao_codigo, usuario_codigo)
@@ -423,14 +424,14 @@ def atualizar_usuario(codigo):
         cpf = request.form['cpf']
         cep = request.form['cep']
         cidade = request.form['cidade']
-        idade = request.form['dt_nasc']
+        dt_nasc = request.form['dt_nasc']
         tipo_sanguineo = request.form['tipo_sanguineo']
         peso = request.form['peso']
         telefone = request.form['telefone']
-        situacao_doacao = request.form['situacao_doacao']
+        opcao_doacao = request.form['opcao_doacao']
         senha = request.form['senha']
 
-        usuario = Usuario(cpf, nome, idade, peso, tipo_sanguineo, cep, cidade, email, senha, telefone, situacao_doacao)
+        usuario = Usuario(cpf, nome, dt_nasc, peso, tipo_sanguineo, cep, cidade, email, senha, telefone, opcao_doacao)
         usuario.setCodigo(codigo)
         ret = dao.Atualizar(usuario)
 
@@ -453,10 +454,10 @@ def atualizar_solicitacao(codigo):
         data = request.form['data']
         urgencia = request.form['urgencia']
         local_internacao = request.form['local_internacao']
-        usuario_cpf = request.form['usuario_cpf']
+        usuario_codigo = request.form['usuario_codigo']
         situacao = request.form['situacao']
 
-        solicitacao = Solicitacao(data, urgencia, local_internacao, situacao, usuario_cpf)
+        solicitacao = Solicitacao(data, urgencia, local_internacao, situacao, usuario_codigo)
         solicitacao.setId(codigo)
 
         ret = dao.Atualizar(solicitacao)
@@ -470,28 +471,33 @@ def atualizar_solicitacao(codigo):
     return render_template("atualizar_solicitacao.html", solicitacao=solicitacao_db)
 
 
-@app.route('/doar_solicitacao/<int:codigo>', methods=['GET', 'POST'])
-def doar_solicitacao(codigo):
-    dao = SolicitacaoDAO(get_db())
-    dao2 = DoacaoDAO(get_db())
+@app.route('/doar_solicitacao, <int:codigo> <local_destino>', methods=['GET', 'POST'])
+def doar_solicitacao(codigo, local_destino):
+    dao = DoacaoDAO(get_db())
 
-    if request.method == "POST":
-        data = request.form['data']
-        urgencia = request.form['urgencia']
-        usuario_cpf = request.form['usuario_cpf']
-        local_internacao = request.form['local_internacao']
+    data = date.today()
+    solicitacao_codigo = codigo
 
+    informacoes_usuario = session.get('logado')
+    usuario_codigo = informacoes_usuario['codigo']
+    print(usuario_codigo)
+    print(codigo)
+    print(data)
 
-        doacao = Doacao(data, urgencia, local_internacao, usuario_cpf)
-        ret = dao2.Inserir(doacao)
+    doacao = Doacao(data, local_destino, solicitacao_codigo, usuario_codigo)
+    codigo, email = dao.Inserir(doacao)
 
-        if codigo > 0:
-            flash("Atualizar com sucesso! Código %d" % codigo, "success")
-        else:
-            flash("Erro ao atualizar!", "danger")
+    if codigo > 0:
+        flash("Doação cadastrada com sucesso! Código %d" % codigo, "success")
+        titulo = "Solicitação atendida."
+        informe = "Caro usuário, sua solicitação acaba de ser atendida. Consulte a agência a qual você está vinculado."
 
-    solicitacao_db = dao.Listar(codigo)
-    return render_template("doar_solicitacao.html", solicitacao= solicitacao_db)
+        notificar(email, titulo, informe)
+    else:
+        flash("Erro ao cadastrar doação! Verifique as informações novamente.", "danger")
+
+    return redirect(url_for('doacoes'))
+
 
 
 # Funções de DELETE

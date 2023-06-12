@@ -1,11 +1,11 @@
 class Solicitacao():
-    def __init__(self, data, urgencia, local_internacao, situacao, usuario_cpf):
+    def __init__(self, data, urgencia, local_internacao, situacao, usuario_codigo):
         self.id = 0
         self.data = data
         self.urgencia = urgencia
         self.local_internacao = local_internacao
         self.situacao = situacao
-        self.usuario_cpf = usuario_cpf
+        self.usuario_codigo = usuario_codigo
 
 
     def setId(self, id):

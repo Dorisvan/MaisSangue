@@ -44,6 +44,7 @@
             <td>{{ s[3] }}</td>
             <td>{{ s[4] }}</td>
             <td>{{ s[5] }}</td>
+            <td> <a href="{{ url_for('doar_solicitacao', codigo=s[0], local_destino=s[3],) }}">Doar</a>|<a href="{{ url_for('atualizar_solicitacao', codigo=s[0]) }}">Editar</a></td>
           </tr>
         {% endfor %}
       {% else %}
