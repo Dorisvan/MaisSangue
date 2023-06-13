@@ -187,6 +187,7 @@ def retorno():
         'codigo': usuario[0],
         'cpf': user[1],
         'nome': user[2],
+        'tipo_sanguineo': usuario[5],
         'email': user[8],
         'estado_sessao': user[14]
     }
@@ -243,6 +244,7 @@ def login():
                 'codigo': usuario[0],
                 'cpf': usuario[1],
                 'nome': usuario[2],
+                'tipo_sanguineo': usuario[5],
                 'email': usuario[8],
                 'estado_sessao': usuario[14]
             }
@@ -471,8 +473,8 @@ def atualizar_solicitacao(codigo):
     return render_template("atualizar_solicitacao.html", solicitacao=solicitacao_db)
 
 
-@app.route('/doar_solicitacao, <int:codigo> <local_destino>', methods=['GET', 'POST'])
-def doar_solicitacao(codigo, local_destino):
+@app.route('/doar_solicitacao, <int:codigo> <local_destino> <tipo_sanguineo>', methods=['GET', 'POST'])
+def doar_solicitacao(codigo, local_destino, tipo_sanguineo):
     dao = DoacaoDAO(get_db())
 
     data = date.today()
@@ -480,12 +482,11 @@ def doar_solicitacao(codigo, local_destino):
 
     informacoes_usuario = session.get('logado')
     usuario_codigo = informacoes_usuario['codigo']
-    print(usuario_codigo)
-    print(codigo)
-    print(data)
+    usuario_tipo_sanguineo = informacoes_usuario['tipo_sanguineo']
+    solicitante_tipo_sanguineo = tipo_sanguineo
 
     doacao = Doacao(data, local_destino, solicitacao_codigo, usuario_codigo)
-    codigo, email = dao.Inserir(doacao)
+    codigo, email = dao.Inserir(doacao, usuario_tipo_sanguineo, solicitante_tipo_sanguineo)
 
     if codigo > 0:
         flash("Doação cadastrada com sucesso! Código %d" % codigo, "success")

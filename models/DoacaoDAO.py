@@ -3,8 +3,16 @@ class DoacaoDAO():
         self.con = con
 
     # CRUD --> Create, Retrieve, Uptade, Delete <--
-    def Inserir(self, Doacao):
+    def Inserir(self, Doacao, usuario_tipo_sanguineo, solicitante_tipo_sanguineo):
         try:
+            cursor = self.con.cursor()
+            situacao = "Pendente"
+            sql1 = "SELECT u.codigo FROM Usuario as u, UsuarioDoenca as ud, Doacao as d, Solicitacao as s WHERE u.codigo = %s AND u.tipo_sanguineo = %s AND u.codigo NOT IN ud.codigo_usuario AND (SELECT Solicitacao WHERE s.codigo = %s AND s.situacao = %s)"
+            cursor.execute(sql1, (Doacao.usuario_codigo, solicitante_tipo_sanguineo, Doacao.solicitacao_codigo, situacao,))
+            usuario = cursor.fetchone()
+            print(usuario)
+            return usuario
+
             sql = "INSERT INTO Doacao(data, local_destino, solicitacao_codigo, usuario_codigo) VALUES (%s, %s, %s, %s)"
 
             cursor = self.con.cursor()
