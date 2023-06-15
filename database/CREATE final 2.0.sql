@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `Doacaodb`.`Usuario` (
   `cpf` VARCHAR(25) NOT NULL,
   `nome` VARCHAR(100) NOT NULL,
   `dt_nasc` DATE NOT NULL,
-  `peso` VARCHAR(10) NOT NULL,
+  `peso` INT NOT NULL,
   `tipo_sanguineo` VARCHAR(10) NOT NULL,
   `cep` VARCHAR(30) NOT NULL,
   `cidade` VARCHAR(100) NOT NULL,

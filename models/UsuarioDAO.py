@@ -20,15 +20,22 @@ class UsuarioDAO():
             return 0
 
 
-    def Listar(self, codigo=None):
+    def Listar(self, codigo, tipo):
         try:
             cursor = self.con.cursor()
-            if codigo != None:
+            if tipo == "Checagem_individual":
                 # pegar somente uma planta
                 sql = "SELECT * FROM Usuario WHERE codigo=%s"
                 cursor.execute(sql, (codigo,))
                 usuario = cursor.fetchone()
                 return usuario
+
+            elif tipo == "Listagem_individual":
+                sql = "SELECT * FROM Usuario WHERE codigo=%s"
+                cursor.execute(sql, (codigo,))
+                usuario = cursor.fetchall()
+                return usuario
+
             else:
                 # pegar todas as plantas
                 sql = "SELECT * FROM Usuario"

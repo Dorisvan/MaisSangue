@@ -1,13 +1,13 @@
 class UsuarioDoenca():
-    def __init__(self, usuario_cpf, doenca_id):
-        self.usuario_cpf = usuario_cpf
+    def __init__(self, doenca_id, usuario_codigo):
+        self.usuario_codigo = usuario_codigo
         self.doenca_id = doenca_id
 
-    def getUsuario_cpf(self):
-        return self.usuario_cpf
+    def getUsuario_codigo(self):
+        return self.usuario_codigo
 
-    def setUsuario_cpf(self, usuario_cpf):
-        self.usuario_cpf = usuario_cpf
+    def setUsuario_codigo(self, usuario_codigo):
+        self.usuario_codigo = usuario_codigo
 
     def getDoenca_id(self):
         return self.doenca_id

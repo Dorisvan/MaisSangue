@@ -1,46 +1,51 @@
 {% extends "index.html" %}
 {% block tudo %}
 
-<section id="appointment" class="appointment section-bg">
-      <div class="container" style="height: 100vh;">
-        <br>
-        <br>
-        <div class="section-title">
-          <h2>Login</h2>
+<section id="appointment" class="appointment section-bg" style="position: relative;">
+    <br>
+    <br>
+    <br>
+      <div class="container" style="height: 80vh;">
           <br>
-          {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              <ul id="messages" class="list-unstyled">
-              {% for category, message in messages %}
-                <li class="alert alert-{{ category }}">{{ message }}</li>
-              {% endfor %}
-              </ul>
-            {% endif %}
-          {% endwith %}
+          <br>
+          <div class="div_externa_form_login container">
+          <div class="section-title">
+            <br>
+            <h2>Login</h2>
+            <br>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <ul id="messages" class="list-unstyled">
+                {% for category, message in messages %}
+                  <li class="alert alert-{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
+          </div>
+
+          <form action="{{ url_for('login') }}" method="POST" role="form">
+            <div class="row">
+              <div class="col-md-7 form-group mt-3 mt-md-0 container">
+                <input type="email" class="form-control" name="email" id="email" placeholder="example@gmail.com" data-rule="email" data-msg="Please enter a valid email" required>
+                <div class="validate"></div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-7 form-group mt-3 container">
+                <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+                <div class="validate"></div>
+              </div>
+            </div>
+            <br>
+            <div class="text-center">
+              <button class="botao-cadastro" type="submit">Logar</button>
+              <a href="/login_google" class="botao-cadastro"><span class="d-none d-md-inline"></span>Entrar com o Google <ion-icon class="icon-google" name="logo-google"></ion-icon></a>
+            </div>
+          </form>
         </div>
-
-        <form action="{{ url_for('login') }}" method="POST" role="form">
-          <div class="row">
-            <div class="col-md-4 form-group mt-3 mt-md-0 container">
-              <input type="email" class="form-control" name="email" id="email" placeholder="example@gmail.com" data-rule="email" data-msg="Please enter a valid email" required>
-              <div class="validate"></div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-4 form-group mt-3 container">
-              <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
-              <div class="validate"></div>
-            </div>
-          </div>
-          <br>
-          <div class="text-center">
-            <button class="botao-cadastro" type="submit">Logar</button>
-            <a href="/login_google" class="botao-cadastro"><span class="d-none d-md-inline"></span>Entrar com o Google <ion-icon class="icon-google" name="logo-google"></ion-icon></a>
-          </div>
-        </form>
-
       </div>
-    </section>
+</section>
 
 {% endblock tudo %}

@@ -17,3 +17,5 @@ VALUES ("HIV"),
 ("Brucelose"),
 ("Transplante de órgãos ou de medula"),
 ("Mal de Parkinson");
+
+SELECT * FROM Doenca;

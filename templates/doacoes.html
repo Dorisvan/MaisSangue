@@ -7,37 +7,99 @@
 <br>
 <br>
 
-  <div class="section-title container">
-    <h2>Lista de Doações</h2>
+{% if usuario_nivel == 1 %}
+  <div class="container">
+
+    <div class="section-title container">
+      <h2>Lista de Doações</h2>
+    </div>
+
+    <div class="row div_externa">
+      <div class="tabela_interna">
+        <table class="table">
+          <thead>
+            <th style="color: #e93138">Código</th>
+            <th style="color: #e93138">Data</th>
+            <th style="color: #e93138">Local da internação</th>
+            <th style="color: #e93138">Tipo sanguìneo</th>
+            <th style="color: #e93138">Código da solicitação</th>
+          </thead>
+          <tbody>
+          {% if doacoes %}
+            {% for d in doacoes %}
+              <tr>
+                <td>{{ d[0] }}</td>
+                <td>{{ d[1] }}</td>
+                <td>{{ d[2] }}</td>
+                <td>{{ d[3] }}</td>
+                <td>{{ d[4] }}</td>
+                <td></td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <p>Nenhum item foi encontrado</p>
+          {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
-  <div class="reply-form" style="text-align: center">
+{% else %}
+  <div class="container">
 
-    <table class="table">
-      <thead>
-        <th style="color: #e93138">Código</th>
-        <th style="color: #e93138">Data</th>
-        <th style="color: #e93138">Local da internação</th>
-        <th style="color: #e93138">Tipo sanguìneo</th>
-        <th style="color: #e93138">Código da solicitação</th>
-      </thead>
-      <tbody>
-      {% if doacoes %}
-        {% for d in doacoes %}
-          <tr>
-            <td>{{ d[0] }}</td>
-            <td>{{ d[1] }}</td>
-            <td>{{ d[2] }}</td>
-            <td>{{ d[3] }}</td>
-            <td>{{ d[4] }}</td>
-            <td></td>
-          </tr>
-        {% endfor %}
-      {% else %}
-        <p>Nenhum item foi encontrado</p>
-      {% endif %}
-      </tbody>
-    </table>
+    <div class="section-title container">
+      <h2>Minhas doações</h2>
+    </div>
+
+    <div class="row div_externa">
+      <div class="tabela_interna">
+        <table class="table">
+          <thead>
+            <th style="color: #e93138">Código</th>
+            <th style="color: #e93138">Data</th>
+            <th style="color: #e93138">Local da internação</th>
+            <th style="color: #e93138">Tipo sanguìneo</th>
+            <th style="color: #e93138">Código da solicitação</th>
+          </thead>
+          <tbody>
+          {% if doacoes_usuario %}
+            {% for d in doacoes_usuario %}
+              <tr>
+                <td>{{ d[0] }}</td>
+                <td>{{ d[1] }}</td>
+                <td>{{ d[2] }}</td>
+                <td>{{ d[3] }}</td>
+                <td>{{ d[4] }}</td>
+                <td></td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <p>Não foi possível encontrar nenhuma doação feita por você.</p>
+          {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
+
+{% endif %}
+  <div class="container"></div>
+    <div class="reply-form" style="text-align: center">
+      <form action="{{ url_for('doacoes_busca') }}" method="POST" >
+        <div class="row">
+          <div class="col-md-4 form-group container">
+            <label for="termo"></label>
+            <input type="text" name="termo" class="form-control" id="termo" placeholder="Pesquisa" required>
+            <div class="validate"></div>
+          </div>
+        </div>
+        <br>
+        <div class="text-center"><button class="botao-cadastro" type="submit">Buscar</button></div>
+        <br>
+      </form>
+    </div>
+  </div>
+
 
 {% endblock tudo %}

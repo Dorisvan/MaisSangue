@@ -7,11 +7,57 @@
 <br>
 <br>
 
-  <div class="section-title container">
-    <h2>Lista de Usuários</h2>
-  </div>
+{% if usuario_nivel == 1 %}
+  <div class="container">
+    <div class="section-title container">
+      <h2>Lista de Usuários</h2>
+    </div>
 
-  <div class="reply-form" style="text-align: center">
+    <div class="row div_externa_listar_usuario">
+
+      <div class="tabela_interna_listar_usuario">
+
+        <table class="table">
+          <thead>
+            <th style="color: #e93138">CPF</th>
+            <th style="color: #e93138">Nome</th>
+            <th style="color: #e93138">Data de nascimento</th>
+            <th style="color: #e93138">Peso</th>
+            <th style="color: #e93138">Tipo_sanguineo</th>
+            <th style="color: #e93138">CEP</th>
+            <th style="color: #e93138">Cidade</th>
+            <th style="color: #e93138">Email</th>
+            <th style="color: #e93138">Senha</th>
+            <th style="color: #e93138">Telefone</th>
+            <th style="color: #e93138">Opções</th>
+          </thead>
+          <tbody>
+          {% if usuarios %}
+            {% for a in usuarios %}
+              <tr>
+                <td>{{ a[1] }}</td>
+                <td>{{ a[2] }}</td>
+                <td>{{ a[3] }}</td>
+                <td>{{ a[4] }}</td>
+                <td>{{ a[5] }}</td>
+                <td>{{ a[6] }}</td>
+                <td>{{ a[7] }}</td>
+                <td>{{ a[8] }}</td>
+                <td>{{ a[9] }}</td>
+                <td>{{ a[10] }}</td>
+                <td> <a href="{{ url_for('excluir_usuario', codigo=a[0]) }}">Excluir</a>|<a href="{{ url_for('atualizar_usuario', codigo=a[0]) }}">Editar</a></td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <p>Nenhum item foi encontrado</p>
+          {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <div>
+
+<div class="reply-form" style="text-align: center">
 
     <form action="{{ url_for('usuarios_busca') }}" method="POST" >
           <div class="row">
@@ -20,46 +66,65 @@
               <input type="text" name="termo" class="form-control" id="termo" placeholder="Pesquisa" required>
               <div class="validate"></div>
             </div>
-            <button class="botao-cadastro" type="submit">Buscar</button>
           </div>
+          <br>
+          <div class="text-center"><button class="botao-cadastro" type="submit">Buscar</button></div>
+          <br>
     </form>
+</div>
 
-    <table class="table">
-      <thead>
-        <th style="color: #e93138">CPF</th>
-        <th style="color: #e93138">Nome</th>
-        <th style="color: #e93138">Data de nascimento</th>
-        <th style="color: #e93138">Peso</th>
-        <th style="color: #e93138">Tipo_sanguineo</th>
-        <th style="color: #e93138">CEP</th>
-        <th style="color: #e93138">Cidade</th>
-        <th style="color: #e93138">Email</th>
-        <th style="color: #e93138">Senha</th>
-        <th style="color: #e93138">Telefone</th>
-        <th style="color: #e93138">Opções</th>
-      </thead>
-      <tbody>
-      {% if usuarios %}
-        {% for a in usuarios %}
-          <tr>
-            <td>{{ a[1] }}</td>
-            <td>{{ a[2] }}</td>
-            <td>{{ a[3] }}</td>
-            <td>{{ a[4] }}</td>
-            <td>{{ a[5] }}</td>
-            <td>{{ a[6] }}</td>
-            <td>{{ a[7] }}</td>
-            <td>{{ a[8] }}</td>
-            <td>{{ a[9] }}</td>
-            <td>{{ a[10] }}</td>
-            <td> <a href="{{ url_for('excluir_usuario', codigo=a[0]) }}">Excluir</a>|<a href="{{ url_for('atualizar_usuario', codigo=a[0]) }}">Editar</a></td>
-          </tr>
-        {% endfor %}
-      {% else %}
-        <p>Nenhum item foi encontrado</p>
-      {% endif %}
-      </tbody>
-    </table>
+{% else %}
+  <div class="container">
+
+    <div class="row div_externa">
+
+      <div class="tabela_interna">
+
+        <div class="section-title container">
+          <h2>Perfil do Usuário</h2>
+        </div>
+
+        <table class="table">
+            <thead>
+              <th style="color: #e93138">CPF</th>
+              <th style="color: #e93138">Nome</th>
+              <th style="color: #e93138">Data de nascimento</th>
+              <th style="color: #e93138">Peso</th>
+              <th style="color: #e93138">Tipo_sanguineo</th>
+              <th style="color: #e93138">CEP</th>
+              <th style="color: #e93138">Cidade</th>
+              <th style="color: #e93138">Email</th>
+              <th style="color: #e93138">Senha</th>
+              <th style="color: #e93138">Telefone</th>
+              <th style="color: #e93138">Opções</th>
+            </thead>
+            <tbody>
+            {% if usuarios %}
+              {% for a in usuarios %}
+                <tr>
+                  <td>{{ a[1] }}</td>
+                  <td>{{ a[2] }}</td>
+                  <td>{{ a[3] }}</td>
+                  <td>{{ a[4] }}</td>
+                  <td>{{ a[5] }}</td>
+                  <td>{{ a[6] }}</td>
+                  <td>{{ a[7] }}</td>
+                  <td>{{ a[8] }}</td>
+                  <td>{{ a[9] }}</td>
+                  <td>{{ a[10] }}</td>
+                  <td> <a href="{{ url_for('excluir_usuario', codigo=a[0]) }}">Excluir</a>|<a href="{{ url_for('atualizar_usuario', codigo=a[0]) }}">Editar</a></td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <p>Não foi possível carregar suas informações.</p>
+            {% endif %}
+
+            </tbody>
+          </table>
+      </div>
+    </div>
   </div>
+
+{% endif %}
 
 {% endblock tudo %}

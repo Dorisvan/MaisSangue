@@ -5,110 +5,112 @@
 <br>
 <br>
 
-<section id="appointment" class="appointment section-bg" style="height: 100vh;">
+<section id="appointment" class="appointment section-bg" style="position: relative;">
       <div class="container">
 
-        <div class="section-title container">
-          <h2>Perfil do usuário</h2>
+        <div class="div_externa_form_cadastro container">
+
+          <div class="section-title container">
+            <h2>Atualizar informações de usuário</h2>
+          </div>
+
+          <form action="{{ url_for('atualizar_usuario', codigo=usuario[0]) }}" method="POST" >
+            <div class="row">
+              <div class="col-md-4 form-group container">
+                <label for="nome"></label>
+                <input type="text" name="nome" class="form-control" value="{{ usuario[2] }}" id="nome" placeholder="Nome" required>
+                <div class="validate"></div>
+              </div>
+              <div class="col-md-4 form-group mt-3 mt-md-0 container">
+                <label for="email"></label>
+                <input type="email" class="form-control" name="email" value="{{ usuario[8] }}" id="email" placeholder="example@gmail.com" required>
+                <div class="validate"></div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 form-group mt-3 container">
+                <label for="cpf"></label>
+                <input type="text" class="form-control" name="cpf" value="{{ usuario[1] }}" id="cpf" placeholder="CPF">
+                <div class="validate"></div>
+              </div>
+              <div class="col-md-4 form-group mt-3 container">
+                <label for="cep"></label>
+                <input type="text" class="form-control" name="cep" value="{{ usuario[6] }}" id="cep" placeholder="CEP">
+                <div class="validate"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 form-group mt-3 container">
+                <label for="cidade"></label>
+                <input type="text" class="form-control" name="cidade" value="{{ usuario[7] }}" id="cidade" placeholder="Cidade">
+                <div class="validate"></div>
+              </div>
+
+              <div class="col-md-4 form-group mt-3 container">
+                <label for="dt_nasc"></label>
+                <input type="text" class="form-control" name="dt_nasc" value="{{ usuario[3] }}" id="dt_nasc" placeholder="Data de nascimento">
+                <div class="validate"></div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 form-group mt-3 container">
+                <label for="tipo_sanguineo"></label>
+                <select name="tipo_sanguineo" id="tipo_sanguineo" class="form-select">
+                  <option value="">Selecione o seu tipo sanguíneo</option>
+                  <option value="A+" {% if usuario[5] == "A+" %}{{ "selected" }}{% endif %}>A+</option>
+                  <option value="A-" {% if usuario[5] == "A-" %}{{ "selected" }}{% endif %}>A-</option>
+                  <option value="B+" {% if usuario[5] == "B+" %}{{ "selected" }}{% endif %}>B+</option>
+                  <option value="B-" {% if usuario[5] == "B-" %}{{ "selected" }}{% endif %}>B-</option>
+                  <option value="AB+" {% if usuario[5] == "AB+" %}{{ "selected" }}{% endif %}>AB+</option>
+                  <option value="AB-" {% if usuario[5] == "AB-" %}{{ "selected" }}{% endif %}>AB-</option>
+                  <option value="O+" {% if usuario[5] == "O+" %}{{ "selected" }}{% endif %}>O+</option>
+                  <option value="O-" {% if usuario[5] == "O-" %}{{ "selected" }}{% endif %}>O-</option>
+                </select>
+                <div class="validate"></div>
+              </div>
+
+              <div class="col-md-4 form-group mt-3 container">
+                <label for="peso"></label>
+                <input type="text" class="form-control" name="peso" value="{{ usuario[4] }}" id="peso" placeholder="Peso">
+                <div class="validate"></div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 form-group mt-3 container">
+                <label for="telefone"></label>
+                  <input type="text" class="form-control" name="telefone" value="{{ usuario[10] }}" id="telefone" placeholder="Telefone">
+                <div class="validate"></div>
+              </div>
+
+              <div class="col-md-4 form-group mt-3 container">
+                  <label for="opcao_doacao"></label>
+                  <select name="opcao_doacao" id="opcao_doacao" class="form-select">
+                  <option value="">Deseja ser um doador?</option>
+                  <option value="Sim" {% if usuario[11] == "Sim" %}{{ "selected" }}{% endif %}>Sim</option>
+                  <option value="Não" {% if usuario[11] == "Não" %}{{ "selected" }}{% endif %}>Não</option>
+                  <option value="No momento não" {% if usuario[11] == "No momento não" %}{{ "selected" }}{% endif %}>No momento não</option>
+                </select>
+                <div class="validate"></div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 form-group mt-3 container">
+                <label for="senha"></label>
+                <input type="password" class="form-control" name="senha" value="{{ usuario[9] }}" id="senha" placeholder="Senha">
+                <div class="validate"></div>
+              </div>
+            </div>
+
+            <br>
+            <br>
+
+            <div class="text-center"><button class="botao-cadastro" type="submit">Atualizar</button></div>
+          </form>
         </div>
-
-        <form action="{{ url_for('atualizar_usuario', codigo=usuario[0]) }}" method="POST" >
-          <div class="row">
-            <div class="col-md-4 form-group container">
-              <label for="nome"></label>
-              <input type="text" name="nome" class="form-control" value="{{ usuario[2] }}" id="nome" placeholder="Nome" required>
-              <div class="validate"></div>
-            </div>
-            <div class="col-md-4 form-group mt-3 mt-md-0 container">
-              <label for="email"></label>
-              <input type="email" class="form-control" name="email" value="{{ usuario[8] }}" id="email" placeholder="example@gmail.com" required>
-              <div class="validate"></div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-4 form-group mt-3 container">
-              <label for="cpf"></label>
-              <input type="text" class="form-control" name="cpf" value="{{ usuario[1] }}" id="cpf" placeholder="CPF">
-              <div class="validate"></div>
-            </div>
-            <div class="col-md-4 form-group mt-3 container">
-              <label for="cep"></label>
-              <input type="text" class="form-control" name="cep" value="{{ usuario[6] }}" id="cep" placeholder="CEP">
-              <div class="validate"></div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 form-group mt-3 container">
-              <label for="cidade"></label>
-              <input type="text" class="form-control" name="cidade" value="{{ usuario[7] }}" id="cidade" placeholder="Cidade">
-              <div class="validate"></div>
-            </div>
-
-            <div class="col-md-4 form-group mt-3 container">
-              <label for="dt_nasc"></label>
-              <input type="text" class="form-control" name="dt_nasc" value="{{ usuario[3] }}" id="dt_nasc" placeholder="Data de nascimento">
-              <div class="validate"></div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-4 form-group mt-3 container">
-              <label for="tipo_sanguineo"></label>
-              <select name="tipo_sanguineo" id="tipo_sanguineo" class="form-select">
-                <option value="">Selecione o seu tipo sanguíneo</option>
-                <option value="A+" {% if usuario[5] == "A+" %}{{ "selected" }}{% endif %}>A+</option>
-                <option value="A-" {% if usuario[5] == "A-" %}{{ "selected" }}{% endif %}>A-</option>
-                <option value="B+" {% if usuario[5] == "B+" %}{{ "selected" }}{% endif %}>B+</option>
-                <option value="B-" {% if usuario[5] == "B-" %}{{ "selected" }}{% endif %}>B-</option>
-                <option value="AB+" {% if usuario[5] == "AB+" %}{{ "selected" }}{% endif %}>AB+</option>
-                <option value="AB-" {% if usuario[5] == "AB-" %}{{ "selected" }}{% endif %}>AB-</option>
-                <option value="O+" {% if usuario[5] == "O+" %}{{ "selected" }}{% endif %}>O+</option>
-                <option value="O-" {% if usuario[5] == "O-" %}{{ "selected" }}{% endif %}>O-</option>
-              </select>
-              <div class="validate"></div>
-            </div>
-
-            <div class="col-md-4 form-group mt-3 container">
-              <label for="peso"></label>
-              <input type="text" class="form-control" name="peso" value="{{ usuario[4] }}" id="peso" placeholder="Peso">
-              <div class="validate"></div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-4 form-group mt-3 container">
-              <label for="telefone"></label>
-                <input type="text" class="form-control" name="telefone" value="{{ usuario[10] }}" id="telefone" placeholder="Telefone">
-              <div class="validate"></div>
-            </div>
-
-            <div class="col-md-4 form-group mt-3 container">
-                <label for="opcao_doacao"></label>
-                <select name="opcao_doacao" id="opcao_doacao" class="form-select">
-                <option value="">Deseja ser um doador?</option>
-                <option value="Sim" {% if usuario[11] == "Sim" %}{{ "selected" }}{% endif %}>Sim</option>
-                <option value="Não" {% if usuario[11] == "Não" %}{{ "selected" }}{% endif %}>Não</option>
-                <option value="No momento não" {% if usuario[11] == "No momento não" %}{{ "selected" }}{% endif %}>No momento não</option>
-              </select>
-              <div class="validate"></div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-4 form-group mt-3 container">
-              <label for="senha"></label>
-              <input type="password" class="form-control" name="senha" value="{{ usuario[9] }}" id="senha" placeholder="Senha">
-              <div class="validate"></div>
-            </div>
-          </div>
-
-          <br>
-          <br>
-
-          <div class="text-center"><button class="botao-cadastro" type="submit">Atualizar</button></div>
-        </form>
-
       </div>
 
       <div class="section-title"></div>

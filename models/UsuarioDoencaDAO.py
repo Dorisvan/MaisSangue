@@ -3,12 +3,12 @@ class UsuarioDoencaDAO():
         self.con = con
 
     # CRUD --> Create, Retrieve, Uptade, Delete <--
-    def Inserir(self, UsuarioDoenca):
+    def Inserir(self, usuariodoenca):
         try:
-            sql = "INSERT INTO UsuarioDoenca(Doenca_id, Usuario_cpf) VALUES (%s, %s)"
+            sql = "INSERT INTO UsuarioDoenca(Doenca_id, Usuario_codigo) VALUES (%s, %s)"
 
             cursor = self.con.cursor()
-            cursor.execute(sql, (UsuarioDoenca.doenca_id, UsuarioDoenca.usuario_cpf))
+            cursor.execute(sql, (usuariodoenca.doenca_id, usuariodoenca.usuario_codigo,))
 
             self.con.commit()
 
@@ -18,20 +18,23 @@ class UsuarioDoencaDAO():
         except:
             return 0
 
-    def Listar(self, codigo=None):
+    def Listar(self, codigo, tipo):
         try:
             cursor = self.con.cursor()
             if codigo != None:
                 # pegar somente uma planta
-                sql = "SELECT * FROM UsuarioDoenca WHERE usuario_cpf=%s"
-                cursor.execute(sql, (codigo,))
-                usuariodoenca = cursor.fetchone()
-                return usuariodoenca
+                sql = "SELECT ud.Usuario_codigo, u.nome, d.id, d.nome FROM UsuarioDoenca as ud, Usuario as u, Doenca as d WHERE ud.Usuario_codigo = %s AND ud.Doenca_id = d.id"
+                cursor.execute(sql, (codigo, ))
+                usuariodoenca = cursor.fetchall()
+                if tipo == "verificar" and usuariodoenca == []:
+                    return None
+                else:
+                    return usuariodoenca
             else:
                 # pegar todas as plantas
-                sql = "SELECT * FROM UsuarioDoenca"
+                sql = 'SELECT ud.Usuario_codigo, u.nome, d.id, d.nome FROM UsuarioDoenca as ud, Usuario as u, Doenca as d WHERE ud.Usuario_codigo = u.codigo AND ud.Doenca_id = d.id'
                 cursor.execute(sql)
-                usuario_doenca= cursor.fetchall()
+                usuario_doenca = cursor.fetchall()
                 return usuario_doenca
         except:
             return None

@@ -7,51 +7,209 @@
 <br>
 <br>
 
-  <div class="section-title container">
-    <h2>Lista de Solicitações</h2>
+{% if usuario_nivel == 1 %}
+  <div class="container">
+
+          <div class="row div_externa">
+              <div class="section-title container">
+                <h2>Lista de Solicitações</h2>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    <ul id="messages" class="list-unstyled">
+                    {% for category, message in messages %}
+                    <!--<img src="static/assets/Imagens/Coração_Doação.png" class="coracao">-->
+                      <li class="alert alert-{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
+              </div>
+              <div class="tabela_interna">
+                <table class="table">
+                  <thead>
+                    <th style="color: #e93138">Código</th>
+                    <th style="color: #e93138">Data</th>
+                    <th style="color: #e93138">Urgência</th>
+                    <th style="color: #e93138">Local da internação</th>
+                    <th style="color: #e93138">Tipo sanguìneo</th>
+                    <th style="color: #e93138">Situação</th>
+                    <th style="color: #e93138">Opções</th>
+                  </thead>
+                  <tbody>
+                  {% if solicitacoes %}
+                    {% for s in solicitacoes %}
+                      <tr>
+                        <td>{{ s[0] }}</td>
+                        <td>{{ s[1] }}</td>
+                        <td>{{ s[2] }}</td>
+                        <td>{{ s[3] }}</td>
+                        <td>{{ s[4] }}</td>
+                        <td>{{ s[5] }}</td>
+                        <td> <a href="{{ url_for('doar_solicitacao', codigo=s[0], local_destino=s[3]) }}">Doar</a>|<a href="{{ url_for('atualizar_solicitacao', codigo=s[0]) }}">Editar</a></td>
+                      </tr>
+                  {% endfor %}
+                  {% else %}
+                    <p>Nenhum item foi encontrado</p>
+                  {% endif %}
+                  </tbody>
+                </table>
+              </div>
+          </div>
   </div>
 
-  <div class="reply-form" style="text-align: center">
+  <br>
+  <br>
+  <br>
 
-    <form action="{{ url_for('solicitacoes_busca') }}" method="POST" >
-          <div class="row">
-            <div class="col-md-4 form-group container">
-              <label for="termo"></label>
-              <input type="text" name="termo" class="form-control" id="termo" placeholder="Pesquisa" required>
-              <div class="validate"></div>
+  <div class="container">
+
+    <div class="section-title container">
+      <h2>Minhas solicitações</h2>
+    </div>
+
+      <div class="div_externa container">
+
+        <div class="tabela_interna">
+          <table class="table">
+            <thead>
+              <th style="color: #e93138">Código</th>
+              <th style="color: #e93138">Data</th>
+              <th style="color: #e93138">Urgência</th>
+              <th style="color: #e93138">Local da internação</th>
+              <th style="color: #e93138">Tipo sanguìneo</th>
+              <th style="color: #e93138">Situação</th>
+              <th style="color: #e93138">Opções</th>
+            </thead>
+            <tbody>
+            {% if solicitacoes_usuario %}
+              {% for s in solicitacoes_usuario %}
+                <tr>
+                  <td>{{ s[0] }}</td>
+                  <td>{{ s[1] }}</td>
+                  <td>{{ s[2] }}</td>
+                  <td>{{ s[3] }}</td>
+                  <td>{{ s[4] }}</td>
+                  <td>{{ s[5] }}</td>
+                  <td><a href="{{ url_for('atualizar_solicitacao', codigo=s[0]) }}">Editar</a></td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <p>Nenhuma solicitação sua foi encnontrada</p>
+            {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+{% else %}
+  <div class="container">
+
+    <div class="section-title container">
+      <h2>Lista de Solicitações</h2>
+    </div>
+
+          <div class="row div_externa">
+
+              <div class="tabela_interna">
+              <table class="table">
+                  <thead>
+                    <th style="color: #e93138">Código</th>
+                    <th style="color: #e93138">Data</th>
+                    <th style="color: #e93138">Urgência</th>
+                    <th style="color: #e93138">Local da internação</th>
+                    <th style="color: #e93138">Tipo sanguìneo</th>
+                    <th style="color: #e93138">Situação</th>
+                    <th style="color: #e93138">Opções</th>
+                  </thead>
+                  <tbody>
+                  {% if solicitacoes %}
+                    {% for s in solicitacoes %}
+                      <tr>
+                        <td>{{ s[0] }}</td>
+                        <td>{{ s[1] }}</td>
+                        <td>{{ s[2] }}</td>
+                        <td>{{ s[3] }}</td>
+                        <td>{{ s[4] }}</td>
+                        <td>{{ s[5] }}</td>
+                        <td> <a href="{{ url_for('doar_solicitacao', codigo=s[0], local_destino=s[3]) }}">Doar</a></td>
+                      </tr>
+                  {% endfor %}
+                  {% else %}
+                    <p>Nenhum item foi encontrado</p>
+                  {% endif %}
+                  </tbody>
+              </table>
+              </div>
             </div>
-            <button class="botao-cadastro" type="submit">Buscar</button>
-          </div>
-    </form>
 
-    <table class="table">
-      <thead>
-        <th style="color: #e93138">Código</th>
-        <th style="color: #e93138">Data</th>
-        <th style="color: #e93138">Urgência</th>
-        <th style="color: #e93138">Local da internação</th>
-        <th style="color: #e93138">Tipo sanguìneo</th>
-        <th style="color: #e93138">Situação</th>
-        <th style="color: #e93138">Opções</th>
-      </thead>
-      <tbody>
-      {% if solicitacoes %}
-        {% for s in solicitacoes %}
-          <tr>
-            <td>{{ s[0] }}</td>
-            <td>{{ s[1] }}</td>
-            <td>{{ s[2] }}</td>
-            <td>{{ s[3] }}</td>
-            <td>{{ s[4] }}</td>
-            <td>{{ s[5] }}</td>
-            <td> <a href="{{ url_for('doar_solicitacao', codigo=s[0], local_destino=s[3], tipo_sanguineo=s[4]) }}">Doar</a>|<a href="{{ url_for('atualizar_solicitacao', codigo=s[0]) }}">Editar</a></td>
-          </tr>
-        {% endfor %}
-      {% else %}
-        <p>Nenhum item foi encontrado</p>
-      {% endif %}
-      </tbody>
-    </table>
+        </div>
+  </div>
+
+  <br>
+  <br>
+  <br>
+
+  <div class="container">
+
+    <div class="section-title container">
+      <h2>Minhas solicitações</h2>
+    </div>
+
+      <div class="row div_externa">
+
+        <div class="tabela_interna">
+          <table class="table">
+            <thead>
+              <th style="color: #e93138">Código</th>
+              <th style="color: #e93138">Data</th>
+              <th style="color: #e93138">Urgência</th>
+              <th style="color: #e93138">Local da internação</th>
+              <th style="color: #e93138">Tipo sanguìneo</th>
+              <th style="color: #e93138">Situação</th>
+              <th style="color: #e93138">Opções</th>
+            </thead>
+            <tbody>
+            {% if solicitacoes_usuario %}
+              {% for s in solicitacoes_usuario %}
+                <tr>
+                  <td>{{ s[0] }}</td>
+                  <td>{{ s[1] }}</td>
+                  <td>{{ s[2] }}</td>
+                  <td>{{ s[3] }}</td>
+                  <td>{{ s[4] }}</td>
+                  <td>{{ s[5] }}</td>
+                  <td><a href="{{ url_for('atualizar_solicitacao', codigo=s[0]) }}">Editar</a></td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <p>Nenhuma solicitação sua foi encnontrada</p>
+            {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+</div>
+
+{% endif %}
+
+<br>
+
+  <div class="container"></div>
+    <div class="reply-form" style="text-align: center">
+      <form action="{{ url_for('solicitacoes_busca') }}" method="POST" >
+        <div class="row">
+          <div class="col-md-4 form-group container">
+            <label for="termo"></label>
+            <input type="text" name="termo" class="form-control" id="termo" placeholder="Pesquisa" required>
+            <div class="validate"></div>
+          </div>
+        </div>
+        <br>
+        <div class="text-center"><button class="botao-cadastro" type="submit">Buscar</button></div>
+        <br>
+      </form>
+    </div>
   </div>
 
 {% endblock tudo %}
